@@ -17,36 +17,31 @@
  *
  */
 
-#ifndef MACHINE_H
-#define MACHINE_H
+#include "State.h"
 
-#include <set>
-#include <tuple>
-#include <map>
-#include <vector>
+using namespace std;
 
-class Tape;
-class Header;
-class State;
-
-class Machine
+State::State(int id, string name)
 {
-public:
-    Machine();
-    virtual ~Machine();
+	m_state = make_tuple(id, name);
+}
 
-private:
-	std::set<State*> m_states; //!< Set of the states of the machine
-	std::set<char> m_sigmaAlphabet; //!< Alphabet set
-	std::set<char> m_gammaAlphabet; //!< Alphabet set plus blank character
-	static const char m_blankChar = -1; //!< Blank character
-	std::map<std::tuple<State*, char>, std::map<State*, char> > m_transitionTable;
-	
-	Tape* m_tape;
-	Header* m_header;
-	
-	Machine(const Machine& other);
-	Machine& operator=(const Machine& other);
-};
+State::State(const State& other)
+{
 
-#endif // MACHINE_H
+}
+
+State::~State()
+{
+
+}
+
+State& State::operator=(const State& other)
+{
+	
+}
+
+bool State::operator==(const State& other) const
+{
+	return (m_state == other.m_state);
+}
