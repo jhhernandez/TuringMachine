@@ -17,34 +17,14 @@
  *
  */
 
-#ifndef HEADER_H
-#define HEADER_H
+#include "TransitionTable.h"
 
-#include <set>
-
-class Tape;
-
-class Header
+TransitionTable::TransitionTable()
 {
-public:
-	enum Direction{
-		LEFT,
-		RIGHT,
-		HALT
-	};
-	
-    Header(Tape& tape);
-	virtual ~Header();
-	bool move(Direction dir);
-	char read();
-	void write(char);
-	
-private:
-	Header(const Header& other);
-    Header& operator=(const Header& other);
-	
-	Tape* m_tape;
-	int m_position;
-};
 
-#endif // HEADER_H
+}
+
+TransitionTable::~TransitionTable()
+{
+
+}

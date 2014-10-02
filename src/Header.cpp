@@ -19,12 +19,10 @@
 
 #include "Header.h"
 
-Header::Header()
-{
+#include "Tape.h"
 
-}
-
-Header::Header(const Header& other)
+Header::Header(Tape& tape) :
+m_tape(&tape)
 {
 
 }
@@ -34,7 +32,28 @@ Header::~Header()
 
 }
 
-Header& Header::operator=(const Header& other)
+bool Header::move(Header::Direction dir)
 {
+	switch(dir) {
+		case RIGHT:
+			++m_position;
+			break;
+		case LEFT:
+			--m_position;
+			break;
+		case HALT:
+			break;
+		default:
+			return false;
+			break;
+	}
+}
 
+char Header::read()
+{
+	return (*m_tape)[m_position];
+}
+
+void Header::write(char)
+{
 }

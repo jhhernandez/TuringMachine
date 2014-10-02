@@ -19,9 +19,11 @@
 
 #include "Tape.h"
 
-Tape::Tape()
-{
+using namespace std;
 
+Tape::Tape(const string& str)
+{
+	// TODO: Asignar str a m_tape poniendo simbolos en blanco (2) al principio y al final
 }
 
 Tape::~Tape()
@@ -32,4 +34,14 @@ Tape::~Tape()
 Tape& Tape::operator=(const Tape& other)
 {
 
+}
+
+const string& Tape::to_string() const
+{
+	return m_tape;
+}
+
+const char Tape::operator[](int index) const
+{
+	return m_tape[index];
 }

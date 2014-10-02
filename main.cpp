@@ -1,6 +1,8 @@
-#include <iostream>
+#include "src/Machine.h"
 
 int main(int argc, char **argv) {
-    std::cout << "Hello, world!" << std::endl;
-    return 0;
+	Machine machine("../maquina.json");
+	
+	machine.run("abab");
+	return EXIT_SUCCESS;
 }

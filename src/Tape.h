@@ -20,19 +20,24 @@
 #ifndef TAPE_H
 #define TAPE_H
 
-#include <list>
+#include <vector>
+#include <string>
 
 class Tape
 {
-public:
-    Tape();
-	virtual ~Tape();
-
-private:
-	std::list<char> m_tape;
 	
-	Tape(const Tape& other);
-	Tape& operator=(const Tape& other);
+private:
+    std::string m_tape;
+
+    Tape(const Tape& other);
+    Tape& operator=(const Tape& other);
+
+public:
+    Tape(const std::string & str);
+    virtual ~Tape();
+    const std::string& to_string() const;
+    const char operator[](int index) const;
+	inline const std::size_t length() const;
 };
 
 #endif // TAPE_H

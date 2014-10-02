@@ -21,14 +21,15 @@
 
 using namespace std;
 
-State::State(int id, string name)
+State::State(int id)
 {
+	string name = "q_" + to_string(id);
 	m_state = make_tuple(id, name);
 }
 
 State::State(const State& other)
 {
-
+	m_state = other.m_state;
 }
 
 State::~State()
@@ -38,7 +39,7 @@ State::~State()
 
 State& State::operator=(const State& other)
 {
-	
+	return *(new State(get<0>(other.m_state)));
 }
 
 bool State::operator==(const State& other) const

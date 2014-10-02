@@ -18,27 +18,44 @@
  */
 
 #include "Machine.h"
+#include "TransitionTable.h"
+#include "State.h"
 #include "Tape.h"
 #include "Header.h"
 
-Machine::Machine() :
-	m_tape(nullptr),
-	m_header(nullptr)
+#include <fstream>
+#include <json_spirit.h>
+
+using namespace std;
+
+Machine::Machine(const std::set< State >& states,
+				 const std::set< char >& gamma,
+				 const std::set< char >& sigma,
+				 const TransitionTable& transitions,
+				 const State initialState,
+				 const std::set< State >& finalStates)
 {
 
 }
 
-Machine::Machine(const Machine& other)
+Machine::Machine(const char* file)
 {
+	ifstream ifs(file);
+	json_spirit::Value root;
+	try {
+		json_spirit::read(ifs, root);
+		cout << json_spirit::write_formatted(root) << endl;
+	} catch (json_spirit::Error_position err) {
+		cout << err.reason_ << endl;
+	}
+}
 
+bool Machine::run(const char* str)
+{
+	return false;
 }
 
 Machine::~Machine()
-{
-
-}
-
-Machine& Machine::operator=(const Machine& other)
 {
 
 }

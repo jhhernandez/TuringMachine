@@ -31,7 +31,7 @@ private:
 	
 	std::tuple<int, std::string> m_state;
 public:
-    State(int id, std::string name);
+    State(int id);
 	inline int id() { return std::get<0>(m_state); }
 	inline std::string name() { return std::get<1>(m_state); }
     ~State();

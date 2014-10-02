@@ -24,23 +24,32 @@
 #include <tuple>
 #include <map>
 #include <vector>
+#include "Header.h"
 
 class Tape;
-class Header;
 class State;
+class TransitionTable;
 
 class Machine
 {
 public:
-    Machine();
+    Machine(const std::set<State>& states,
+			const std::set<char>& gamma,
+			const std::set<char>& sigma,
+			const TransitionTable& transitions,
+			const State initialState,
+			const std::set<State>& finalStates
+	);
+	Machine(const char* file);
     virtual ~Machine();
+	bool run(const char* str);
 
 private:
 	std::set<State*> m_states; //!< Set of the states of the machine
-	std::set<char> m_sigmaAlphabet; //!< Alphabet set
-	std::set<char> m_gammaAlphabet; //!< Alphabet set plus blank character
-	static const char m_blankChar = -1; //!< Blank character
-	std::map<std::tuple<State*, char>, std::map<State*, char> > m_transitionTable;
+	std::set<char> m_symbols; //!< Alphabet set
+	std::set<char> m_inputSyms; //!< Alphabet set plus blank character
+	static const char m_blankSymbol = -1;
+	TransitionTable* m_transitionTable;
 	
 	Tape* m_tape;
 	Header* m_header;
