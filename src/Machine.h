@@ -25,6 +25,7 @@
 #include <map>
 #include <vector>
 #include "Header.h"
+#include <json_spirit.h>
 
 class Tape;
 class State;
@@ -46,8 +47,8 @@ public:
 
 private:
 	std::set<State*> m_states; //!< Set of the states of the machine
-	std::set<char> m_symbols; //!< Alphabet set
-	std::set<char> m_inputSyms; //!< Alphabet set plus blank character
+	std::set<std::string> m_sigmaAlphabet; //!< Alphabet set
+	std::set<std::string> m_gammaAlphabet; //!< Alphabet set plus blank character
 	static const char m_blankSymbol = -1;
 	TransitionTable* m_transitionTable;
 	
@@ -56,6 +57,8 @@ private:
 	
 	Machine(const Machine& other);
 	Machine& operator=(const Machine& other);
+	bool buildStateSet(const json_spirit::mArray& states);
+	bool buildAlphabets(const json_spirit::mArray& alphabet);
 };
 
 #endif // MACHINE_H

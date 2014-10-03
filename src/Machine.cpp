@@ -24,38 +24,73 @@
 #include "Header.h"
 
 #include <fstream>
-#include <json_spirit.h>
 
 using namespace std;
+using namespace json_spirit;
 
 Machine::Machine(const std::set< State >& states,
-				 const std::set< char >& gamma,
-				 const std::set< char >& sigma,
-				 const TransitionTable& transitions,
-				 const State initialState,
-				 const std::set< State >& finalStates)
+                 const std::set< char >& gamma,
+                 const std::set< char >& sigma,
+                 const TransitionTable& transitions,
+                 const State initialState,
+                 const std::set< State >& finalStates)
 {
 
 }
 
 Machine::Machine(const char* file)
 {
-	ifstream ifs(file);
-	json_spirit::Value root;
-	try {
-		json_spirit::read(ifs, root);
-		cout << json_spirit::write_formatted(root) << endl;
-	} catch (json_spirit::Error_position err) {
-		cout << err.reason_ << endl;
-	}
+    ifstream ifs(file);
+    mValue root;
+    mObject rootObj;
+
+    try {
+        read(ifs, root);
+        rootObj = root.get_obj();
+
+        mObject sections = rootObj.find("TuringMachine")->second.get_obj();
+        mArray alphabet = sections.find("Alphabet")->second.get_array();
+		mArray states = sections.find("StateList")->second.get_array();
+
+        buildAlphabets(alphabet);
+		buildStateSet(states);
+    } catch (Error_position err) {
+        cout << err.reason_ << endl;
+    }
 }
 
 bool Machine::run(const char* str)
 {
-	return false;
+    return false;
 }
 
 Machine::~Machine()
 {
 
+}
+
+bool Machine::buildStateSet(const mArray& states)
+{
+	for (mValue state : states) {
+		
+	}
+}
+
+bool Machine::buildAlphabets(const mArray& alphabet) // FIXME: usar char, no string
+{
+    for (mValue c : alphabet) {
+        switch (c.type()) {
+        case Value_type::str_type:
+			m_sigmaAlphabet.insert(c.get_str());
+			m_gammaAlphabet.insert(c.get_str());
+            break;
+        case Value_type::int_type:
+			m_gammaAlphabet.insert(c.get_str());
+            break;
+        default:
+            return false;
+            break;
+        }
+    }
+    return true;
 }

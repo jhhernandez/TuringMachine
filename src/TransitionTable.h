@@ -20,19 +20,24 @@
 #ifndef TRANSITIONTABLE_H
 #define TRANSITIONTABLE_H
 
-#include <vector>
+#include <map>
 #include <tuple>
 
 #include "Header.h"
+#include "State.h"
+
+class State;
+
+typedef std::tuple<char, Header::Direction, State> transition_table_cell;
+typedef std::map<char, transition_table_cell> transition_table_col;
 
 class TransitionTable
 {
 private:
-	std::vector<std::vector<std::tuple<char, Header::Direction> > > m_table;
+	const std::map<State, transition_table_col> m_table;
 public:
     TransitionTable();
     ~TransitionTable();
-	void readFile(const char* file);
 };
 
 #endif // TRANSITIONTABLE_H
