@@ -46,19 +46,26 @@ public:
 	bool run(const char* str);
 
 private:
-	std::set<State*> m_states; //!< Set of the states of the machine
-	std::set<std::string> m_sigmaAlphabet; //!< Alphabet set
-	std::set<std::string> m_gammaAlphabet; //!< Alphabet set plus blank character
+	std::set<State> m_states; //!< Set of the states of the machine
+	std::set<State*> m_finalStates;
+	std::set<signed char> m_sigmaAlphabet; //!< Alphabet set
+	std::set<signed char> m_gammaAlphabet; //!< Alphabet set plus blank character
 	static const char m_blankSymbol = -1;
 	TransitionTable* m_transitionTable;
 	
 	Tape* m_tape;
 	Header* m_header;
 	
+	State* m_initialState;
+	State* m_currentState;
+	signed char m_currentSymbol;
+	bool m_wellFormedMachine;
+	
 	Machine(const Machine& other);
 	Machine& operator=(const Machine& other);
 	bool buildStateSet(const json_spirit::mArray& states);
 	bool buildAlphabets(const json_spirit::mArray& alphabet);
+	bool buildTransitionTable(const json_spirit::mArray& graph);
 };
 
 #endif // MACHINE_H

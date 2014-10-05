@@ -20,7 +20,7 @@
 #ifndef TRANSITIONTABLE_H
 #define TRANSITIONTABLE_H
 
-#include <map>
+#include <vector>
 #include <tuple>
 
 #include "Header.h"
@@ -28,16 +28,31 @@
 
 class State;
 
-typedef std::tuple<char, Header::Direction, State> transition_table_cell;
-typedef std::map<char, transition_table_cell> transition_table_col;
+typedef std::tuple<const State, char> transition_table_cell_t;
+typedef std::tuple<char, Header::Direction, const State> transition_table_content_t;
 
 class TransitionTable
 {
 private:
-	const std::map<State, transition_table_col> m_table;
+	std::vector<std::pair<transition_table_cell_t, transition_table_content_t> > m_table;
 public:
     TransitionTable();
-    ~TransitionTable();
+	~TransitionTable();
+	
+	void addContentToCell(const transition_table_content_t& content,
+						  const transition_table_cell_t& cell);
+	
+	const transition_table_content_t& getCellContent(const transition_table_cell_t& cell);
+	const transition_table_content_t& getCellContent(const State& state, char from);
+	
+	const char getCellSymbol(const transition_table_cell_t& cell);
+	const char getCellSymbol(const State& state, char from);
+	const Header::Direction getCellDirection(const transition_table_cell_t& cell);
+	const Header::Direction getCellDirection(const State& state, char from);
+	const State& getCellState(const transition_table_cell_t& cell);
+	const State& getCellState(const State& state, char from);
+	
+	size_t size() const { return m_table.size(); }
 };
 
 #endif // TRANSITIONTABLE_H

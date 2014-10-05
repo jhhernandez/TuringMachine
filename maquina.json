@@ -17,38 +17,38 @@
 		{
 			"State" : 0, 
 			"Transitions" : [
-			{"Transition" : {"from" : "a", "to" : "a", "move" : "L"}},
-			{"Transition" : {"from" : "b", "to" : "b", "move" : "L"}},
-			{"Transition" : {"from" : -1, "to" : -1, "move" : "R", "toState" : 1}}
+			{"from" : "a", "to" : "a", "move" : "L"},
+			{"from" : "b", "to" : "b", "move" : "L"},
+			{"from" : -1, "to" : -1, "move" : "R", "toState" : 1}
 			]
 		},
 		{
 			"State" : 1,
 			"Transitions" : [
-			{"Transition" : {"from" : "b", "to" : "b", "move" : "R"}},
-			{"Transition" : {"from" : "a", "to" : "a", "move" : "R", "toState" : 2}}
+			{"from" : "b", "to" : "b", "move" : "R"},
+			{"from" : "a", "to" : "a", "move" : "R", "toState" : 2}
 			]
 		},
 		{
 			"State" : 2,
 			"Transitions" : [
-			{"Transition" : {"from" : "a", "to" : "a", "move" : "R", "toState" : 3}},
-			{"Transition" : {"from" : "b", "to" : "b", "move" : "R", "toState" : 1}}
+			{"from" : "a", "to" : "a", "move" : "R", "toState" : 3},
+			{"from" : "b", "to" : "b", "move" : "R", "toState" : 1}
 			]
 		},
 		{
 			"State" : 3,
 			"Transitions" : [
-			{"Transition" : {"from" : "a", "to" : "a", "move" : "R", "toState" : 2}},
-			{"Transition" : {"from" : "b", "to" : "b", "move" : "R", "toState" : 4}}
+			{"from" : "a", "to" : "a", "move" : "R", "toState" : 2},
+			{"from" : "b", "to" : "b", "move" : "R", "toState" : 4}
 			]
 		},
 		{
 			"State" : 4,
 			"Transitions" : [
-			{"Transition" : {"from" : "a", "to" : "a", "move" : "R", "toState" : 1}},
-			{"Transition" : {"from" : "b", "to" : "b", "move" : "R", "toState" : 1}},
-			{"Transition" : {"from" : -1, "to" : -1, "move" : "L"}}
+			{"from" : "a", "to" : "a", "move" : "R", "toState" : 1},
+			{"from" : "b", "to" : "b", "move" : "R", "toState" : 1},
+			{"from" : -1, "to" : -1, "move" : "L"}
 			]
 		}
 		]

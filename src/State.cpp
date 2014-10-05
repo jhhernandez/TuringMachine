@@ -21,15 +21,13 @@
 
 using namespace std;
 
-State::State(int id)
+State::State(int id) : m_id(id)
 {
-	string name = "q_" + to_string(id);
-	m_state = make_tuple(id, name);
+	m_name = "q_" + to_string(id);
 }
 
-State::State(const State& other)
+State::State(const State& other) : m_id(other.id()), m_name(other.name())
 {
-	m_state = other.m_state;
 }
 
 State::~State()
@@ -37,12 +35,12 @@ State::~State()
 
 }
 
-State& State::operator=(const State& other)
-{
-	return *(new State(get<0>(other.m_state)));
-}
-
 bool State::operator==(const State& other) const
 {
-	return (m_state == other.m_state);
+	return (m_id == other.id());
+}
+
+bool State::operator<(const State& other) const
+{
+	return (id() < other.id());
 }

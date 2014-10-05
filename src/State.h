@@ -20,22 +20,23 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include <tuple>
 #include <string>
 
 class State
 {
 private:
-	State(const State& other);
-	State& operator=(const State& other);
-	
-	std::tuple<int, std::string> m_state;
+	uint32_t m_id;
+	std::string m_name;
 public:
     State(int id);
-	inline int id() { return std::get<0>(m_state); }
-	inline std::string name() { return std::get<1>(m_state); }
-    ~State();
+	State(const State& other);
+	virtual ~State();
+	
+	inline int id() const { return m_id; }
+	inline std::string name() const { return m_name; }
+
     bool operator==(const State& other) const;
+	bool operator<(const State& other) const;
 };
 
 #endif // STATE_H

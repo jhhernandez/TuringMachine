@@ -3,3 +3,4 @@ build/
 doc/*
 !doc/Doxyfile
 .kdev4/
+*.user
