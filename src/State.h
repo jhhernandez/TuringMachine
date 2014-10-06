@@ -30,8 +30,8 @@ private:
 public:
 	State();
     State(int id);
-	State(const State& other);
-	State& operator=(const State& other);
+	/*State(const State& other);
+	State& operator=(const State& other);*/
 	~State();
 	
 	inline int id() const { return m_id; }

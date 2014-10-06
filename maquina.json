@@ -39,7 +39,7 @@
 		{
 			"State" : 3,
 			"Transitions" : [
-			{"from" : "a", "to" : "a", "move" : "R", "toState" : 2},
+			{"from" : "a", "to" : "a", "move" : "R"},
 			{"from" : "b", "to" : "b", "move" : "R", "toState" : 4}
 			]
 		},

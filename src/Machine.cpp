@@ -52,6 +52,18 @@ m_header(new Header)
 				
 				if (buildTransitionTable(transitions)) {
 					cout << "Transition table successfully built." << endl;
+					
+					for (int i = 0; i < m_transitionTable.size(); ++i) {
+						cout << i << ":\t";
+						for (auto j : m_transitionTable[i]) {
+							cout << "(" << get<0>(get<1>(j)) << ", " <<
+											get<1>(get<1>(j)) << "," <<
+											get<2>(get<1>(j)).name() << ")\t";
+						}
+						cout << endl;
+					}
+					cin.get();
+					
 					m_wellFormedMachine = true;
 
 				} else {
@@ -225,9 +237,14 @@ bool Machine::run(const char* str, bool stepping)
 
 		m_header->write(writeSymbol);
 		m_header->move(nextMove);
-		// TODO: Incluir las transiciones de estado
+		// TODO: Controlar los estados de muerte
+		if (nextState.id() != -1) {
+			currentState = nextState;
+		}
+		cout << endl;
 
-		if (m_finalStates.find(currentState) != m_finalStates.end()) {
+		if (writeSymbol == static_cast<signed char>(-1) &&
+			m_finalStates.find(currentState) != m_finalStates.end()) {
 			cout << "Reached a final state." << endl;
 			running = false;
 		}
