@@ -25,7 +25,6 @@
 
 class Tape
 {
-	
 private:
     std::string m_tape;
 

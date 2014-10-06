@@ -18,11 +18,13 @@
  */
 
 #include "Header.h"
-
 #include "Tape.h"
 
-Header::Header(Tape& tape) :
-m_tape(&tape)
+#include <iostream>
+
+using namespace std;
+
+Header::Header() : m_position(0)
 {
 
 }
@@ -49,9 +51,9 @@ bool Header::move(Header::Direction dir)
 	}
 }
 
-char Header::read()
+char Header::read(const Tape& tape)
 {
-	return (*m_tape)[m_position];
+	return tape[m_position];
 }
 
 void Header::write(char)

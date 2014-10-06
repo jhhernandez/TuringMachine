@@ -21,6 +21,7 @@
 #define TRANSITIONTABLE_H
 
 #include <vector>
+#include <map>
 #include <tuple>
 
 #include "Header.h"
@@ -28,13 +29,13 @@
 
 class State;
 
-typedef std::tuple<const State, char> transition_table_cell_t;
-typedef std::tuple<char, Header::Direction, const State> transition_table_content_t;
+typedef std::tuple<const State, signed char> transition_table_cell_t;
+typedef std::tuple<signed char, Header::Direction, const State> transition_table_content_t;
 
-class TransitionTable
+class TransitionTable : public std::vector<std::vector<std::tuple<signed char, transition_table_content_t> > >
 {
 private:
-	std::vector<std::pair<transition_table_cell_t, transition_table_content_t> > m_table;
+	// std::vector<std::map<signed char, transition_table_content_t> > m_table;
 public:
     TransitionTable();
 	~TransitionTable();
@@ -51,8 +52,9 @@ public:
 	const Header::Direction getCellDirection(const State& state, char from);
 	const State& getCellState(const transition_table_cell_t& cell);
 	const State& getCellState(const State& state, char from);
-	
-	size_t size() const { return m_table.size(); }
+
+	// size_t size() const { return m_table.size(); }
+	void caca();
 };
 
 #endif // TRANSITIONTABLE_H

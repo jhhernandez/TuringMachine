@@ -33,17 +33,16 @@ public:
 		HALT
 	};
 	
-    Header(Tape& tape);
+    Header();
 	virtual ~Header();
 	bool move(Direction dir);
-	char read();
+	char read(const Tape& tape);
 	void write(char);
 	
 private:
 	Header(const Header& other);
     Header& operator=(const Header& other);
-	
-	Tape* m_tape;
+
 	int m_position;
 };
 

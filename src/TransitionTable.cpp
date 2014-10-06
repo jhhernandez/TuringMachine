@@ -37,18 +37,12 @@ void TransitionTable::addContentToCell(const transition_table_content_t& content
 {
 	cout << "transition " << get<0>(cell).name() << "," << get<1>(cell);
 	cout << ": " << get<0>(content) << "," << get<1>(content) << ";" << get<2>(content).name() << endl;
-	pair<transition_table_cell_t, transition_table_content_t> caca(cell, content);
-	m_table.push_back(caca);
+	tuple<signed char, transition_table_content_t> caca(get<1>(cell), content);
+	this->at(get<0>(cell).id()).push_back(caca);
 }
 
 const transition_table_content_t& TransitionTable::getCellContent(const transition_table_cell_t& cell)
 {
-	for (auto c : m_table) {
-		if (get<0>(c) == cell) {
-			return get<1>(c);
-		}
-	}
-	// FIXME: no devuelve nada en caso de error
 }
 
 const transition_table_content_t& TransitionTable::getCellContent(const State& state, char from)
@@ -58,11 +52,7 @@ const transition_table_content_t& TransitionTable::getCellContent(const State& s
 
 const char TransitionTable::getCellSymbol(const transition_table_cell_t& cell)
 {
-	for (auto c : m_table) {
-		if (get<0>(c) == cell) {
-			return get<0>(get<1>(c));
-		}
-	}
+
 }
 
 const char TransitionTable::getCellSymbol(const State& state, char from)
@@ -72,11 +62,6 @@ const char TransitionTable::getCellSymbol(const State& state, char from)
 
 const Header::Direction TransitionTable::getCellDirection(const transition_table_cell_t& cell)
 {
-	for (auto c : m_table) {
-		if (get<0>(c) == cell) {
-			return get<1>(get<1>(c));
-		}
-	}
 }
 
 const Header::Direction TransitionTable::getCellDirection(const State& state, char from)
@@ -86,11 +71,6 @@ const Header::Direction TransitionTable::getCellDirection(const State& state, ch
 
 const State& TransitionTable::getCellState(const transition_table_cell_t& cell)
 {
-	for (auto c : m_table) {
-		if (get<0>(c) == cell) {
-			return get<2>(get<1>(c));
-		}
-	}
 }
 
 const State& TransitionTable::getCellState(const State& state, char from)
@@ -98,3 +78,7 @@ const State& TransitionTable::getCellState(const State& state, char from)
 	return getCellState(transition_table_cell_t(state, from));
 }
 
+void TransitionTable::caca()
+{
+	cout << this->size();
+}

@@ -18,12 +18,20 @@
  */
 
 #include "Tape.h"
+#include <iostream>
 
 using namespace std;
 
 Tape::Tape(const string& str)
 {
-	// TODO: Asignar str a m_tape poniendo simbolos en blanco (2) al principio y al final
+	signed char blank = static_cast<signed char>(-1);
+	string tmp;
+	tmp += blank;
+	tmp += blank;
+	tmp += str;
+	tmp += blank;
+	tmp += blank;
+	m_tape = tmp;
 }
 
 Tape::~Tape()
@@ -43,5 +51,5 @@ const string& Tape::to_string() const
 
 const char Tape::operator[](int index) const
 {
-	return m_tape[index];
+	return m_tape.at(index);
 }

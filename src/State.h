@@ -25,12 +25,14 @@
 class State
 {
 private:
-	uint32_t m_id;
+	int32_t m_id;
 	std::string m_name;
 public:
+	State();
     State(int id);
 	State(const State& other);
-	virtual ~State();
+	State& operator=(const State& other);
+	~State();
 	
 	inline int id() const { return m_id; }
 	inline std::string name() const { return m_name; }

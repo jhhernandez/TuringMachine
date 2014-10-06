@@ -25,39 +25,36 @@
 #include <map>
 #include <vector>
 #include "Header.h"
+#include "State.h"
 #include <json_spirit.h>
 
 class Tape;
-class State;
 class TransitionTable;
+
+typedef std::tuple<const State, signed char> transition_table_cell_t;
+typedef std::tuple<signed char, Header::Direction, const State> transition_table_content_t;
 
 class Machine
 {
 public:
-    Machine(const std::set<State>& states,
-			const std::set<char>& gamma,
-			const std::set<char>& sigma,
-			const TransitionTable& transitions,
-			const State initialState,
-			const std::set<State>& finalStates
-	);
 	Machine(const char* file);
     virtual ~Machine();
-	bool run(const char* str);
+	bool run(const char* str, bool stepping = false);
 
 private:
 	std::set<State> m_states; //!< Set of the states of the machine
-	std::set<State*> m_finalStates;
+	std::set<State> m_finalStates;
 	std::set<signed char> m_sigmaAlphabet; //!< Alphabet set
 	std::set<signed char> m_gammaAlphabet; //!< Alphabet set plus blank character
 	static const char m_blankSymbol = -1;
-	TransitionTable* m_transitionTable;
+	// TransitionTable* m_transitionTable;
+	std::vector<std::map<signed char, transition_table_content_t> > m_transitionTable;
 	
 	Tape* m_tape;
 	Header* m_header;
 	
-	State* m_initialState;
-	State* m_currentState;
+	State m_initialState;
+	State m_currentState;
 	signed char m_currentSymbol;
 	bool m_wellFormedMachine;
 	

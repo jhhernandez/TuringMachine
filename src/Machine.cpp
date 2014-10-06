@@ -18,7 +18,8 @@
  */
 
 #include "Machine.h"
-#include "TransitionTable.h"
+//#include "TransitionTable.h"
+#include "State.h"
 #include "Tape.h"
 #include "Header.h"
 
@@ -27,17 +28,8 @@
 using namespace std;
 using namespace json_spirit;
 
-Machine::Machine(const std::set< State >& states,
-                 const std::set< char >& gamma,
-                 const std::set< char >& sigma,
-                 const TransitionTable& transitions,
-                 const State initialState,
-                 const std::set< State >& finalStates)
-{
-
-}
-
-Machine::Machine(const char* file)
+Machine::Machine(const char* file) : m_wellFormedMachine(false), m_currentSymbol('z'),
+m_header(new Header)
 {
     ifstream ifs(file);
     mValue root;
@@ -52,22 +44,31 @@ Machine::Machine(const char* file)
 		mArray states = sections.find("StateList")->second.get_array();
 		mArray transitions = sections.find("TransitionGraph")->second.get_array();
 
-		buildAlphabets(alphabet);
-		buildStateSet(states);
-		buildTransitionTable(transitions);
+		if (buildAlphabets(alphabet)) {
+			cout << "Alphabet successfully built." << endl;
+			if (buildStateSet(states)) {
+				cout << "States successfully built." << endl;
+				if (buildTransitionTable(transitions)) {
+					cout << "Transition table successfully built." << endl;
+					m_wellFormedMachine = true;
+				} else {
+					return;
+				}
+			} else {
+				return;
+			}
+		} else {
+			return;
+		}
 	} catch (Error_position err) {
 		cout << err.reason_ << endl;
 	}
 }
 
-bool Machine::run(const char* str)
-{
-    return false;
-}
-
 Machine::~Machine()
 {
-
+	delete m_tape;
+	delete m_header;
 }
 
 bool Machine::buildAlphabets(const mArray& alphabet)
@@ -103,12 +104,14 @@ bool Machine::buildStateSet(const mArray& states) //FIXME: añadir restricciones
 		
 		m_states.insert(*newState);
 		if (stateObj.find("initial") != stateObj.end()) {
-			m_initialState = newState;
+			m_initialState = *newState;
 		}
 		if (stateObj.find("final") != stateObj.end()) {
-			m_finalStates.insert(newState);
+			m_finalStates.insert(*newState);
 		}
 	}
+	m_transitionTable.resize(m_states.size());
+
 	return true;
 }
 
@@ -173,11 +176,41 @@ bool Machine::buildTransitionTable(const mArray& graph)
 
 				transition_table_cell_t cell(*compareState, from);
 				transition_table_content_t content(to, dir, *toState);
-				m_transitionTable->addContentToCell(content, cell);
+				// m_transitionTable->addContentToCell(content, cell);
+				m_transitionTable[compareState->id()].insert(
+					pair<signed char, transition_table_content_t>(from, content));
 			}
 		} else {
 			return false;
 		}
 	}
 	return true;
+}
+
+bool Machine::run(const char* str, bool stepping)
+{
+	m_tape = new Tape(str);
+	cout << m_tape->to_string() << endl;
+	cin.get();
+	static bool running = true;
+
+	if (!m_wellFormedMachine) {
+		cout << "The machine is not well formed and cannot be run." << endl;
+		return false;
+	}
+
+	while (running) {
+		m_currentSymbol = m_header->read(*m_tape);
+		cout << "Read symbol " << m_currentSymbol << ". ";
+		
+		if (m_finalStates.find(m_currentState) != m_finalStates.end()) {
+			cout << "Reached a final state." << endl;
+			running = false;
+		}
+		if (stepping) {
+			cin.get();
+		}
+	}
+
+    return true;
 }

@@ -21,13 +21,24 @@
 
 using namespace std;
 
-State::State(int id) : m_id(id)
+State::State() : m_id(-1)
 {
-	m_name = "q_" + to_string(id);
+	m_name = "q_" + to_string(m_id);
 }
 
-State::State(const State& other) : m_id(other.id()), m_name(other.name())
+State::State(int id) : m_id(id)
 {
+	m_name = "q_" + to_string(m_id);
+}
+
+State::State(const State& other) : m_id(other.m_id)
+{
+	m_name = "q_" + to_string(m_id);
+}
+
+State& State::operator=(const State& other)
+{
+	return *new State(other.id());
 }
 
 State::~State()
