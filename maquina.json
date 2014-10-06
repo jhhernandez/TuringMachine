@@ -2,11 +2,11 @@
 	"TuringMachine" :
 	{
 		"StateList" : [
-		{"id" : 0, "initial" : "true"},
+		{"id" : 0, "initial" : true},
 		{"id" : 1},
 		{"id" : 2},
 		{"id" : 3},
-		{"id" : 4, "final" : "true"}
+		{"id" : 4, "final" : true}
 		],
 		"Alphabet" : [
 		"a",

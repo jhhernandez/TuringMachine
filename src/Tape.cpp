@@ -49,7 +49,12 @@ const string& Tape::to_string() const
 	return m_tape;
 }
 
-const char Tape::operator[](int index) const
+char& Tape::operator[](size_t npos)
 {
-	return m_tape.at(index);
+	return m_tape.at(npos);
+}
+
+void Tape::replace(size_t npos, char c)
+{
+	m_tape.at(npos) = c;
 }

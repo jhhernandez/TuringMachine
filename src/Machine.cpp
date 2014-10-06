@@ -28,7 +28,7 @@
 using namespace std;
 using namespace json_spirit;
 
-Machine::Machine(const char* file) : m_wellFormedMachine(false), m_currentSymbol('z'),
+Machine::Machine(const char* file) : m_wellFormedMachine(false), m_initialState(0),
 m_header(new Header)
 {
     ifstream ifs(file);
@@ -46,11 +46,14 @@ m_header(new Header)
 
 		if (buildAlphabets(alphabet)) {
 			cout << "Alphabet successfully built." << endl;
+			
 			if (buildStateSet(states)) {
 				cout << "States successfully built." << endl;
+				
 				if (buildTransitionTable(transitions)) {
 					cout << "Transition table successfully built." << endl;
 					m_wellFormedMachine = true;
+
 				} else {
 					return;
 				}
@@ -94,21 +97,23 @@ bool Machine::buildStateSet(const mArray& states) //FIXME: añadir restricciones
 {
 	mObject stateObj;
 	int id;
+	State* newState;
 	
 	for (mValue state : states) {
-		id = -1;
-
 		stateObj = state.get_obj();
 		id = stateObj.find("id")->second.get_int();
-		State* newState = new State(id);
+		newState = new State(id);
 		
 		m_states.insert(*newState);
-		if (stateObj.find("initial") != stateObj.end()) {
+		
+		if (stateObj.find("initial") != stateObj.end()) { // Debugear aqui Machine.cpp:116
 			m_initialState = *newState;
 		}
 		if (stateObj.find("final") != stateObj.end()) {
 			m_finalStates.insert(*newState);
 		}
+		
+		delete newState;
 	}
 	m_transitionTable.resize(m_states.size());
 
@@ -124,8 +129,7 @@ bool Machine::buildTransitionTable(const mArray& graph)
 	State* compareState;
 	State* toState;
 	Header::Direction dir;
-	
-	
+
 	for (mValue node : graph) {
 		graphObj = node.get_obj();
 		compareState = new State(graphObj.find("State")->second.get_int());
@@ -190,20 +194,40 @@ bool Machine::buildTransitionTable(const mArray& graph)
 bool Machine::run(const char* str, bool stepping)
 {
 	m_tape = new Tape(str);
-	cout << m_tape->to_string() << endl;
-	cin.get();
-	static bool running = true;
-
+	m_header->attachTape(*m_tape);
+	
+	bool running = true;
+	bool stateChanged = false;
+	signed char currentSymbol;
+	signed char writeSymbol;
+	Header::Direction nextMove;
+	State nextState;
+	State currentState = m_initialState;
+	
 	if (!m_wellFormedMachine) {
 		cout << "The machine is not well formed and cannot be run." << endl;
 		return false;
 	}
 
 	while (running) {
-		m_currentSymbol = m_header->read(*m_tape);
-		cout << "Read symbol " << m_currentSymbol << ". ";
+		currentSymbol = m_header->read();
+		cout << "Read symbol " << currentSymbol << " in tape " << m_tape->to_string() << ". ";
+		cout << "Looking up transition in (" << currentState.name() << ", " <<
+			currentSymbol << "). ";
+
+		writeSymbol = get<0>(m_transitionTable[currentState.id()][currentSymbol]);
+		nextMove = get<1>(m_transitionTable[currentState.id()][currentSymbol]);
+		nextState = get<2>(m_transitionTable[currentState.id()][currentSymbol]);
 		
-		if (m_finalStates.find(m_currentState) != m_finalStates.end()) {
+		cout << "Writing " << writeSymbol << ", Moving " <<
+			(nextMove == Header::Direction::LEFT?'L':'R');
+		if (nextState.id() != -1) { cout << ", changing state to " << nextState.name(); }
+
+		m_header->write(writeSymbol);
+		m_header->move(nextMove);
+		// TODO: Incluir las transiciones de estado
+
+		if (m_finalStates.find(currentState) != m_finalStates.end()) {
 			cout << "Reached a final state." << endl;
 			running = false;
 		}

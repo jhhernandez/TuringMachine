@@ -35,15 +35,17 @@ public:
 	
     Header();
 	virtual ~Header();
+	void attachTape(Tape& tape);
 	bool move(Direction dir);
-	char read(const Tape& tape);
-	void write(char);
-	
+	char read();
+	void write(char c);
+
 private:
 	Header(const Header& other);
     Header& operator=(const Header& other);
 
-	int m_position;
+	Tape* m_tape;
+	std::size_t m_position;
 };
 
 #endif // HEADER_H

@@ -35,8 +35,9 @@ public:
     Tape(const std::string & str);
     virtual ~Tape();
     const std::string& to_string() const;
-    const char operator[](int index) const;
-	inline const std::size_t length() const;
+    char& operator[](size_t npos);
+	void replace(size_t npos, char c); // FIXME: cambiar para usar operator[]
+	inline const std::size_t length() const { return m_tape.size(); }
 };
 
 #endif // TAPE_H

@@ -54,8 +54,6 @@ private:
 	Header* m_header;
 	
 	State m_initialState;
-	State m_currentState;
-	signed char m_currentSymbol;
 	bool m_wellFormedMachine;
 	
 	Machine(const Machine& other);
