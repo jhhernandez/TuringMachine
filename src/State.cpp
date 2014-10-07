@@ -31,16 +31,6 @@ State::State(int id) : m_id(id)
 	m_name = "q_" + to_string(m_id);
 }
 
-/*State::State(const State& other) : m_id(other.m_id)
-{
-	m_name = "q_" + to_string(m_id);
-}
-
-State& State::operator=(const State& other)
-{
-	return *new State(other.id());
-}*/
-
 State::~State()
 {
 

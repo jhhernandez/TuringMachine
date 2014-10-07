@@ -52,18 +52,6 @@ m_header(new Header)
 				
 				if (buildTransitionTable(transitions)) {
 					cout << "Transition table successfully built." << endl;
-					
-					for (int i = 0; i < m_transitionTable.size(); ++i) {
-						cout << i << ":\t";
-						for (auto j : m_transitionTable[i]) {
-							cout << "(" << get<0>(get<1>(j)) << ", " <<
-											get<1>(get<1>(j)) << "," <<
-											get<2>(get<1>(j)).name() << ")\t";
-						}
-						cout << endl;
-					}
-					cin.get();
-					
 					m_wellFormedMachine = true;
 
 				} else {
@@ -208,8 +196,7 @@ bool Machine::run(const char* str, bool stepping)
 	m_tape = new Tape(str);
 	m_header->attachTape(*m_tape);
 	
-	bool running = true;
-	bool stateChanged = false;
+	bool success = false;
 	signed char currentSymbol;
 	signed char writeSymbol;
 	Header::Direction nextMove;
@@ -221,12 +208,16 @@ bool Machine::run(const char* str, bool stepping)
 		return false;
 	}
 
-	while (running) {
+	while (1) {
 		currentSymbol = m_header->read();
 		cout << "Read symbol " << currentSymbol << " in tape " << m_tape->to_string() << ". ";
 		cout << "Looking up transition in (" << currentState.name() << ", " <<
 			currentSymbol << "). ";
 
+		if (m_transitionTable[currentState.id()].find(currentSymbol) == m_transitionTable[currentState.id()].end()) {
+			cout << "Reached a dead state. " << endl;
+			break;
+		}
 		writeSymbol = get<0>(m_transitionTable[currentState.id()][currentSymbol]);
 		nextMove = get<1>(m_transitionTable[currentState.id()][currentSymbol]);
 		nextState = get<2>(m_transitionTable[currentState.id()][currentSymbol]);
@@ -237,7 +228,6 @@ bool Machine::run(const char* str, bool stepping)
 
 		m_header->write(writeSymbol);
 		m_header->move(nextMove);
-		// TODO: Controlar los estados de muerte
 		if (nextState.id() != -1) {
 			currentState = nextState;
 		}
@@ -246,12 +236,13 @@ bool Machine::run(const char* str, bool stepping)
 		if (writeSymbol == static_cast<signed char>(-1) &&
 			m_finalStates.find(currentState) != m_finalStates.end()) {
 			cout << "Reached a final state." << endl;
-			running = false;
+			success = true;
+			break;
 		}
 		if (stepping) {
 			cin.get();
 		}
 	}
 
-    return true;
+    return success;
 }

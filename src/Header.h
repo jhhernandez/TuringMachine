@@ -45,7 +45,7 @@ private:
     Header& operator=(const Header& other);
 
 	Tape* m_tape;
-	std::size_t m_position;
+	int m_position;
 };
 
 #endif // HEADER_H
