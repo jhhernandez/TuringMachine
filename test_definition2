@@ -1,0 +1,46 @@
+{
+	"TuringMachine" :
+	{
+		"StateList" : [
+		{"id" : 0, "initial" : true},
+		{"id" : 1},
+		{"id" : 2},
+		{"id" : 3, "final" : true}
+		],
+		"Alphabet" : [
+		"a",
+		"b",
+		-1
+		],
+		"TransitionGraph" : [
+		{
+			"State" : 0, 
+			"Transitions" : [
+			{"from" : "a", "to" : "a", "move" : "L"},
+			{"from" : "b", "to" : "b", "move" : "L"},
+			{"from" : -1, "to" : -1, "move" : "R", "toState" : 1}
+			]
+		},
+		{
+			"State" : 1,
+			"Transitions" : [
+			{"from" : "a", "to" : "a", "move" : "R", "toState" : 2}
+			]
+		},
+		{
+			"State" : 2,
+			"Transitions" : [
+			{"from" : "a", "to" : "a", "move" : "R"},
+			{"from" : "b", "to" : "b", "move" : "R", "toState" : 3}
+			]
+		},
+		{
+			"State" : 3,
+			"Transitions" : [
+			{"from" : "b", "to" : "b", "move" : "R"},
+			{"from" : -1, "to" : -1, "move" : "L"}
+			]
+		}
+		]
+	}
+}
