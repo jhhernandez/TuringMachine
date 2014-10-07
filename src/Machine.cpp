@@ -93,7 +93,7 @@ bool Machine::buildAlphabets(const mArray& alphabet)
     return true;
 }
 
-bool Machine::buildStateSet(const mArray& states) //FIXME: añadir restricciones
+bool Machine::buildStateSet(const mArray& states)
 {
 	mObject stateObj;
 	int id;
@@ -106,7 +106,7 @@ bool Machine::buildStateSet(const mArray& states) //FIXME: añadir restricciones
 		
 		m_states.insert(*newState);
 		
-		if (stateObj.find("initial") != stateObj.end()) { // Debugear aqui Machine.cpp:116
+		if (stateObj.find("initial") != stateObj.end()) {
 			m_initialState = *newState;
 		}
 		if (stateObj.find("final") != stateObj.end()) {
