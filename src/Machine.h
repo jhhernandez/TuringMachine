@@ -26,7 +26,7 @@
 #include <vector>
 #include "Header.h"
 #include "State.h"
-#include <json_spirit.h>
+#include <json_spirit/json_spirit.h>
 
 class Tape;
 class TransitionTable;
