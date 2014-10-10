@@ -1,0 +1,62 @@
+{
+	"TuringMachine" :
+	{
+		"StateList" : [
+		{"id" : 0, "initial" : true},
+		{"id" : 1},
+		{"id" : 2},
+		{"id" : 3},
+		{"id" : 4},
+		{"id" : 5, "final" : true}
+		],
+		"Alphabet" : [
+		"1",
+		"x",
+		-1
+		],
+		"TransitionGraph" : [
+		{
+			"State" : 0, 
+			"Transitions" : [
+			{"read" : "1", "write" : "1", "move" : "L"},
+			{"read" : "x", "write" : "x", "move" : "R", "toState" : 1},
+			{"read" : -1, "write" : -1, "move" : "R", "toState" : 1}
+			]
+		},
+		{
+			"State" : 1,
+			"Transitions" : [
+			{"read" : "1", "write" : "x", "move" : "R", "toState" : 2},
+			{"read" : -1, "write" : -1, "move" : "L", "toState" : 5}
+			]
+		},
+		{
+			"State" : 2,
+			"Transitions" : [
+			{"read" : "1", "write" : "1", "move" : "R"},
+			{"read" : -1, "write" : -1, "move" : "R", "toState" : 3}
+			]
+		},
+		{
+			"State" : 3,
+			"Transitions" : [
+			{"read" : "1", "write" : "1", "move" : "R"},
+			{"read" : -1, "write" : "1", "move" : "L", "toState" : 4}
+			]
+		},
+		{
+			"State" : 4,
+			"Transitions" : [
+			{"read" : "1", "write" : "1", "move" : "L"},
+			{"read" : -1, "write" : -1, "move" : "L", "toState" : 0}
+			]
+		},
+		{
+			"State" : 5,
+			"Transitions" : [
+			{"read" : "x", "write" : "1", "move" : "L"}
+			]
+		}
+		]
+	}
+}

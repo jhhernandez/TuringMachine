@@ -138,24 +138,24 @@ bool Machine::buildTransitionTable(const mArray& graph)
 			mArray transitions = graphObj.find("Transitions")->second.get_array();
 			for (mValue transition : transitions) {
 				mObject transitionObj = transition.get_obj();
-				switch(transitionObj.find("from")->second.type()) {
+				switch(transitionObj.find("read")->second.type()) {
 					case Value_type::str_type:
-						from = transitionObj.find("from")->second.get_str()[0];
+						from = transitionObj.find("read")->second.get_str()[0];
 						break;
 					case Value_type::int_type:
-						from = static_cast<signed char>(transitionObj.find("from")->second.get_int());
+						from = static_cast<signed char>(transitionObj.find("read")->second.get_int());
 						break;
 					default:
 						return false;
 						break;
 				}
 
-				switch(transitionObj.find("to")->second.type()) {
+				switch(transitionObj.find("write")->second.type()) {
 					case Value_type::str_type:
-						to = transitionObj.find("to")->second.get_str()[0];
+						to = transitionObj.find("write")->second.get_str()[0];
 						break;
 					case Value_type::int_type:
-						to = static_cast<signed char>(transitionObj.find("to")->second.get_int());
+						to = static_cast<signed char>(transitionObj.find("write")->second.get_int());
 						break;
 					default:
 						return false;
@@ -215,7 +215,12 @@ bool Machine::run(const char* str, bool stepping)
 			currentSymbol << "). ";
 
 		if (m_transitionTable[currentState.id()].find(currentSymbol) == m_transitionTable[currentState.id()].end()) {
-			cout << "Reached a dead state. " << endl;
+			if (m_finalStates.find(currentState) != m_finalStates.end()) {
+				cout << "Reached a final state." << endl;
+				success = true;
+			} else {
+				cout << "Reached a dead state." << endl;
+			}
 			break;
 		}
 		writeSymbol = get<0>(m_transitionTable[currentState.id()][currentSymbol]);
@@ -233,12 +238,6 @@ bool Machine::run(const char* str, bool stepping)
 		}
 		cout << endl;
 
-		if (writeSymbol == static_cast<signed char>(-1) &&
-			m_finalStates.find(currentState) != m_finalStates.end()) {
-			cout << "Reached a final state." << endl;
-			success = true;
-			break;
-		}
 		if (stepping) {
 			cin.get();
 		}

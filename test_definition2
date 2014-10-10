@@ -16,29 +16,28 @@
 		{
 			"State" : 0, 
 			"Transitions" : [
-			{"from" : "a", "to" : "a", "move" : "L"},
-			{"from" : "b", "to" : "b", "move" : "L"},
-			{"from" : -1, "to" : -1, "move" : "R", "toState" : 1}
+			{"read" : "a", "write" : "a", "move" : "L"},
+			{"read" : "b", "write" : "b", "move" : "L"},
+			{"read" : -1, "write" : -1, "move" : "R", "toState" : 1}
 			]
 		},
 		{
 			"State" : 1,
 			"Transitions" : [
-			{"from" : "a", "to" : "a", "move" : "R", "toState" : 2}
+			{"read" : "a", "write" : "a", "move" : "R", "toState" : 2}
 			]
 		},
 		{
 			"State" : 2,
 			"Transitions" : [
-			{"from" : "a", "to" : "a", "move" : "R"},
-			{"from" : "b", "to" : "b", "move" : "R", "toState" : 3}
+			{"read" : "a", "write" : "a", "move" : "R"},
+			{"read" : "b", "write" : "b", "move" : "R", "toState" : 3}
 			]
 		},
 		{
 			"State" : 3,
 			"Transitions" : [
-			{"from" : "b", "to" : "b", "move" : "R"},
-			{"from" : -1, "to" : -1, "move" : "L"}
+			{"read" : "b", "write" : "b", "move" : "R"}
 			]
 		}
 		]

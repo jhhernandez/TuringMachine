@@ -54,7 +54,7 @@ char& Tape::operator[](size_t npos)
 	return m_tape.at(npos);
 }
 
-void Tape::replace(size_t npos, char c)
+void Tape::resize(size_t size)
 {
-	m_tape.at(npos) = c;
+	m_tape.resize(size, static_cast<signed char>(-1));
 }

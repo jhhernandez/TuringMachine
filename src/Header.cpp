@@ -72,5 +72,8 @@ char Header::read()
 
 void Header::write(char c)
 {
+	if (m_position >= m_tape->length() - 3) {
+		m_tape->resize(m_tape->length() + 1);
+	}
 	(*m_tape)[m_position] = c;
 }
