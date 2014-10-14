@@ -49,14 +49,10 @@ m_header(new Header)
 			
 			if (buildStateSet(states)) {
 				cout << "States successfully built." << endl;
-				
 				if (buildTransitionTable(transitions)) {
-					cout << "Transition table successfully built." << endl;
-					m_wellFormedMachine = true;
-
-				} else {
-					return;
-				}
+						cout << "Transition table successfully built." << endl;
+						m_wellFormedMachine = true;
+					}
 			} else {
 				return;
 			}
@@ -244,4 +240,9 @@ bool Machine::run(const char* str, bool stepping)
 	}
 
     return success;
+}
+
+bool Machine::buildMultitapeTransitionTable(const mArray& graph)
+{
+	return true;
 }

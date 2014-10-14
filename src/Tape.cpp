@@ -58,3 +58,14 @@ void Tape::resize(size_t size)
 {
 	m_tape.resize(size, static_cast<signed char>(-1));
 }
+
+void Tape::resize(Header::Direction direction)
+{
+	switch(direction) {
+		case Header::Direction::RIGHT:
+			m_tape.resize(m_tape.size() + 1, static_cast<signed char>(-1));
+			break;
+		case Header::Direction::LEFT:
+			break;
+	}
+}

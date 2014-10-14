@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <string>
+#include "Header.h"
 
 class Tape
 {
@@ -38,6 +39,7 @@ public:
     char& operator[](size_t npos);
 	inline const std::size_t length() const { return m_tape.size(); }
 	void resize(size_t size);
+	void resize(Header::Direction direction);
 };
 
 #endif // TAPE_H

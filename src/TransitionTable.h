@@ -32,12 +32,14 @@ class State;
 typedef std::tuple<const State, signed char> transition_table_cell_t;
 typedef std::tuple<signed char, Header::Direction, const State> transition_table_content_t;
 
-class TransitionTable : public std::vector<std::vector<std::tuple<signed char, transition_table_content_t> > >
+class TransitionTable
 {
 private:
-	// std::vector<std::map<signed char, transition_table_content_t> > m_table;
+	std::map<signed char, transition_table_content_t>* m_table;
+	size_t m_tapeCount;
+	size_t m_stateCount;
 public:
-    TransitionTable();
+    TransitionTable(size_t states, size_t tapes = 1);
 	~TransitionTable();
 	
 	void addContentToCell(const transition_table_content_t& content,
@@ -53,8 +55,7 @@ public:
 	const State& getCellState(const transition_table_cell_t& cell);
 	const State& getCellState(const State& state, char from);
 
-	// size_t size() const { return m_table.size(); }
-	void caca();
+	size_t size() const { return m_stateCount; }
 };
 
 #endif // TRANSITIONTABLE_H

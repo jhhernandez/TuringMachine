@@ -38,7 +38,7 @@ class Machine
 {
 public:
 	Machine(const char* file);
-    virtual ~Machine();
+	virtual ~Machine();
 	bool run(const char* str, bool stepping = false);
 
 private:
@@ -49,18 +49,19 @@ private:
 	static const char m_blankSymbol = -1;
 	// TransitionTable* m_transitionTable;
 	std::vector<std::map<signed char, transition_table_content_t> > m_transitionTable;
-	
+
 	Tape* m_tape;
 	Header* m_header;
-	
+
 	State m_initialState;
 	bool m_wellFormedMachine;
-	
+
 	Machine(const Machine& other);
 	Machine& operator=(const Machine& other);
 	bool buildStateSet(const json_spirit::mArray& states);
 	bool buildAlphabets(const json_spirit::mArray& alphabet);
 	bool buildTransitionTable(const json_spirit::mArray& graph);
+	bool buildMultitapeTransitionTable(const json_spirit::mArray& graph);
 };
 
 #endif // MACHINE_H

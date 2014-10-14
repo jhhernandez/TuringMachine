@@ -41,7 +41,8 @@ void Header::attachTape(Tape& tape)
 
 bool Header::move(Header::Direction dir)
 {
-	switch(dir) {
+	m_movement = dir;
+	switch(m_movement) {
 		case RIGHT:
 			if (m_position + 1 > m_tape->length()) {
 				m_position = 0;
@@ -72,8 +73,10 @@ char Header::read()
 
 void Header::write(char c)
 {
-	if (m_position >= m_tape->length() - 3) {
-		m_tape->resize(m_tape->length() + 1);
+	if (m_movement == RIGHT && m_position >= m_tape->length() - 2) {
+		m_tape->resize(RIGHT);
+	} else if (m_movement == LEFT && m_position <= 2) {
+		
 	}
 	(*m_tape)[m_position] = c;
 }
