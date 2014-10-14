@@ -206,7 +206,7 @@ bool Machine::run(const char* str, bool stepping)
 
 	while (1) {
 		currentSymbol = m_header->read();
-		cout << "Read symbol " << currentSymbol << " in tape " << m_tape->to_string() << ". ";
+		cout << "Read symbol " << currentSymbol << " in tape " << m_tape->stdString() << ". ";
 		cout << "Looking up transition in (" << currentState.name() << ", " <<
 			currentSymbol << "). ";
 

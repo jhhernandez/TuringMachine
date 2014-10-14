@@ -46,7 +46,6 @@ private:
 
 	Tape* m_tape;
 	int m_position;
-	Direction m_movement;
 };
 
 #endif // HEADER_H

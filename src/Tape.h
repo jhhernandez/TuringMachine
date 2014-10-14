@@ -35,11 +35,9 @@ private:
 public:
     Tape(const std::string & str);
     virtual ~Tape();
-    const std::string& to_string() const;
+    const std::string& stdString() const;
     char& operator[](size_t npos);
 	inline const std::size_t length() const { return m_tape.size(); }
-	void resize(size_t size);
-	void resize(Header::Direction direction);
 };
 
 #endif // TAPE_H

@@ -44,28 +44,20 @@ Tape& Tape::operator=(const Tape& other)
 
 }
 
-const string& Tape::to_string() const
+const string& Tape::stdString() const
 {
 	return m_tape;
 }
 
 char& Tape::operator[](size_t npos)
 {
-	return m_tape.at(npos);
-}
-
-void Tape::resize(size_t size)
-{
-	m_tape.resize(size, static_cast<signed char>(-1));
-}
-
-void Tape::resize(Header::Direction direction)
-{
-	switch(direction) {
-		case Header::Direction::RIGHT:
-			m_tape.resize(m_tape.size() + 1, static_cast<signed char>(-1));
-			break;
-		case Header::Direction::LEFT:
-			break;
+	if (npos >= m_tape.length() - 1) {
+		m_tape.resize(m_tape.length() + 1, static_cast<signed char>(-1));
+	} else if (npos < 1) {
+		string tmp;
+		tmp.append(1, static_cast<signed char>(-1));
+		tmp.append(m_tape);
+		m_tape = tmp;
 	}
+	return m_tape[npos];
 }
