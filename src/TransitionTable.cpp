@@ -32,7 +32,7 @@ m_stateCount(states)
 
 TransitionTable::~TransitionTable()
 {
-	delete m_table;
+	delete [] m_table;
 }
 
 void TransitionTable::addContentToCell(const transition_table_content_t& content, const transition_table_cell_t& cell)
@@ -80,4 +80,17 @@ const State& TransitionTable::getCellState(const transition_table_cell_t& cell)
 const State& TransitionTable::getCellState(const State& state, char from)
 {
 	return getCellState(transition_table_cell_t(state, from));
+}
+
+bool TransitionTable::existsTransition(const transition_table_cell_t& cell)
+{
+	if (get<0>(cell).id() >= 0 && get<0>(cell).id() < m_stateCount) {
+		return (m_table[get<0>(cell).id()].find(get<1>(cell)) == m_table[get<0>(cell).id()].end());
+	}
+	return false;
+}
+
+bool TransitionTable::existsTransition(const State& state, char from)
+{
+	return existsTransition(transition_table_cell_t(state.id(), from));
 }

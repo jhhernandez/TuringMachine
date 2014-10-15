@@ -18,7 +18,7 @@
  */
 
 #include "Machine.h"
-//#include "TransitionTable.h"
+#include "TransitionTable.h"
 #include "State.h"
 #include "Tape.h"
 #include "Header.h"
@@ -38,21 +38,34 @@ m_header(new Header)
     try {
 		read(ifs, root);
 		rootObj = root.get_obj();
+		mValue type;
 
 		mObject sections = rootObj.find("TuringMachine")->second.get_obj();
 		mArray alphabet = sections.find("Alphabet")->second.get_array();
 		mArray states = sections.find("StateList")->second.get_array();
 		mArray transitions = sections.find("TransitionGraph")->second.get_array();
+		if (sections.find("Type") != sections.end()) {
+			type = sections.find("Type")->second.get_str();
+		}
 
 		if (buildAlphabets(alphabet)) {
 			cout << "Alphabet successfully built." << endl;
 			
 			if (buildStateSet(states)) {
 				cout << "States successfully built." << endl;
-				if (buildTransitionTable(transitions)) {
+				if (!type.is_null()) {
+					if (type == "multiTape") {
+						if (buildMultitapeTransitionTable(transitions)) {
+							cout << "Transition table successfully built." << endl;
+							m_wellFormedMachine = true;
+						}
+					}
+				} else {
+					if (buildTransitionTable(transitions)) {
 						cout << "Transition table successfully built." << endl;
 						m_wellFormedMachine = true;
 					}
+				}
 			} else {
 				return;
 			}
@@ -68,6 +81,7 @@ Machine::~Machine()
 {
 	delete m_tape;
 	delete m_header;
+	delete m_transitionTable;
 }
 
 bool Machine::buildAlphabets(const mArray& alphabet)
@@ -111,7 +125,7 @@ bool Machine::buildStateSet(const mArray& states)
 		
 		delete newState;
 	}
-	m_transitionTable.resize(m_states.size());
+	m_transitionTable = new TransitionTable(m_states.size());
 
 	return true;
 }
@@ -176,13 +190,14 @@ bool Machine::buildTransitionTable(const mArray& graph)
 
 				transition_table_cell_t cell(*compareState, from);
 				transition_table_content_t content(to, dir, *toState);
-				// m_transitionTable->addContentToCell(content, cell);
-				m_transitionTable[compareState->id()].insert(
-					pair<signed char, transition_table_content_t>(from, content));
+				m_transitionTable->addContentToCell(content, cell);
+				
+				delete toState;
 			}
 		} else {
 			return false;
 		}
+		delete compareState;
 	}
 	return true;
 }
@@ -210,7 +225,8 @@ bool Machine::run(const char* str, bool stepping)
 		cout << "Looking up transition in (" << currentState.name() << ", " <<
 			currentSymbol << "). ";
 
-		if (m_transitionTable[currentState.id()].find(currentSymbol) == m_transitionTable[currentState.id()].end()) {
+			
+		if (m_transitionTable->existsTransition(currentState.id(), currentSymbol)) {
 			if (m_finalStates.find(currentState) != m_finalStates.end()) {
 				cout << "Reached a final state." << endl;
 				success = true;
@@ -219,9 +235,10 @@ bool Machine::run(const char* str, bool stepping)
 			}
 			break;
 		}
-		writeSymbol = get<0>(m_transitionTable[currentState.id()][currentSymbol]);
-		nextMove = get<1>(m_transitionTable[currentState.id()][currentSymbol]);
-		nextState = get<2>(m_transitionTable[currentState.id()][currentSymbol]);
+
+		writeSymbol = m_transitionTable->getCellSymbol(currentState.id(), currentSymbol);
+		nextMove = m_transitionTable->getCellDirection(currentState.id(), currentSymbol);
+		nextState = m_transitionTable->getCellState(currentState.id(), currentSymbol);
 		
 		cout << "Writing " << writeSymbol << ", Moving " <<
 			(nextMove == Header::Direction::LEFT?'L':'R');

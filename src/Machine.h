@@ -47,8 +47,7 @@ private:
 	std::set<signed char> m_sigmaAlphabet; //!< Alphabet set
 	std::set<signed char> m_gammaAlphabet; //!< Alphabet set plus blank character
 	static const char m_blankSymbol = -1;
-	// TransitionTable* m_transitionTable;
-	std::vector<std::map<signed char, transition_table_content_t> > m_transitionTable;
+	TransitionTable* m_transitionTable;
 
 	Tape* m_tape;
 	Header* m_header;

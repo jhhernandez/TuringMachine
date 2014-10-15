@@ -54,6 +54,8 @@ public:
 	const Header::Direction getCellDirection(const State& state, char from);
 	const State& getCellState(const transition_table_cell_t& cell);
 	const State& getCellState(const State& state, char from);
+	bool existsTransition(const transition_table_cell_t& cell);
+	bool existsTransition(const State& state, char from);
 
 	size_t size() const { return m_stateCount; }
 };
