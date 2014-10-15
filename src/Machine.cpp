@@ -187,9 +187,13 @@ bool Machine::buildTransitionTable(const mArray& graph)
 				} else {
 					toState = new State(-1);
 				}
-
-				transition_table_cell_t cell(*compareState, from);
-				transition_table_content_t content(to, dir, *toState);
+				
+				string tmp("");
+				tmp += from;
+				transition_table_cell_t cell(*compareState, tmp);
+				tmp = "";
+				tmp += to;
+				transition_table_content_t content(tmp, dir, *toState);
 				m_transitionTable->addContentToCell(content, cell);
 				
 				delete toState;
@@ -209,7 +213,7 @@ bool Machine::run(const char* str, bool stepping)
 	
 	bool success = false;
 	signed char currentSymbol;
-	signed char writeSymbol;
+	string writeSymbol;
 	Header::Direction nextMove;
 	State nextState;
 	State currentState = m_initialState;

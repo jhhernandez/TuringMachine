@@ -19,15 +19,13 @@
 
 #include "TransitionTable.h"
 
-#include <iostream>
-
 using namespace std;
 
 TransitionTable::TransitionTable(size_t states, size_t tapes) :
 m_tapeCount(tapes),
 m_stateCount(states)
 {
-	m_table = new std::map<signed char, transition_table_content_t>[m_stateCount];
+	m_table = new std::map<string, transition_table_content_t>[m_stateCount];
 }
 
 TransitionTable::~TransitionTable()
@@ -38,7 +36,7 @@ TransitionTable::~TransitionTable()
 void TransitionTable::addContentToCell(const transition_table_content_t& content, const transition_table_cell_t& cell)
 {
 	if (get<0>(cell).id() >= 0 && get<0>(cell).id() < m_stateCount) {
-		m_table[get<0>(cell).id()].insert(pair<signed char, transition_table_content_t>(get<1>(cell), content));
+		m_table[get<0>(cell).id()].insert(pair<string, transition_table_content_t>(get<1>(cell), content));
 	}
 }
 
@@ -49,17 +47,21 @@ const transition_table_content_t& TransitionTable::getCellContent(const transiti
 
 const transition_table_content_t& TransitionTable::getCellContent(const State& state, char from)
 {
-	return getCellContent(transition_table_cell_t(state, from));
+	string tmp("");
+	tmp += from;
+	return getCellContent(transition_table_cell_t(state, tmp));
 }
 
-const char TransitionTable::getCellSymbol(const transition_table_cell_t& cell)
+const string& TransitionTable::getCellSymbol(const transition_table_cell_t& cell)
 {
 	return get<0>(m_table[get<0>(cell).id()][get<1>(cell)]);
 }
 
-const char TransitionTable::getCellSymbol(const State& state, char from)
+const string& TransitionTable::getCellSymbol(const State& state, char from)
 {
-	return getCellSymbol(transition_table_cell_t(state, from));
+	string tmp("");
+	tmp += from;
+	return getCellSymbol(transition_table_cell_t(state, tmp));
 }
 
 const Header::Direction TransitionTable::getCellDirection(const transition_table_cell_t& cell)
@@ -69,7 +71,9 @@ const Header::Direction TransitionTable::getCellDirection(const transition_table
 
 const Header::Direction TransitionTable::getCellDirection(const State& state, char from)
 {
-	return getCellDirection(transition_table_cell_t(state, from));
+	string tmp("");
+	tmp += from;
+	return getCellDirection(transition_table_cell_t(state, tmp));
 }
 
 const State& TransitionTable::getCellState(const transition_table_cell_t& cell)
@@ -79,7 +83,9 @@ const State& TransitionTable::getCellState(const transition_table_cell_t& cell)
 
 const State& TransitionTable::getCellState(const State& state, char from)
 {
-	return getCellState(transition_table_cell_t(state, from));
+	string tmp("");
+	tmp += from;
+	return getCellState(transition_table_cell_t(state, tmp));
 }
 
 bool TransitionTable::existsTransition(const transition_table_cell_t& cell)
@@ -92,5 +98,7 @@ bool TransitionTable::existsTransition(const transition_table_cell_t& cell)
 
 bool TransitionTable::existsTransition(const State& state, char from)
 {
-	return existsTransition(transition_table_cell_t(state.id(), from));
+	string tmp("");
+	tmp += from;
+	return existsTransition(transition_table_cell_t(state.id(), tmp));
 }

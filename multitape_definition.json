@@ -23,7 +23,7 @@
 			"State" : 0, 
 			"Transitions" : [
 			{"read" : ["a","a"], "write" : ["a","a"], "move" : ["L","L"]},
-			{"read" : "b", "write" : "b", "move" : "L"},
+			{"read" : ["b","b"], "write" : "b", "move" : "L"},
 			{"read" : -1, "write" : -1, "move" : "R", "toState" : 1}
 			]
 		},

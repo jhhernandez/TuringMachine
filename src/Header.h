@@ -20,6 +20,7 @@
 #ifndef HEADER_H
 #define HEADER_H
 
+#include <string>
 #include <set>
 
 class Tape;
@@ -38,7 +39,7 @@ public:
 	void attachTape(Tape& tape);
 	bool move(Direction dir);
 	char read();
-	void write(char c);
+	void write(std::string str);
 
 private:
 	Header(const Header& other);

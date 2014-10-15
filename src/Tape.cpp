@@ -22,7 +22,8 @@
 
 using namespace std;
 
-Tape::Tape(const string& str)
+Tape::Tape(const string& str, uint id) :
+m_id(id)
 {
 	signed char blank = static_cast<signed char>(-1);
 	string tmp;

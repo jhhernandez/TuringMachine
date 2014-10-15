@@ -31,9 +31,6 @@
 class Tape;
 class TransitionTable;
 
-typedef std::tuple<const State, signed char> transition_table_cell_t;
-typedef std::tuple<signed char, Header::Direction, const State> transition_table_content_t;
-
 class Machine
 {
 public:
