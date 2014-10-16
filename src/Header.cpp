@@ -72,5 +72,8 @@ char Header::read()
 
 void Header::write(symbol_t c)
 {
+	if (m_position < 1) {
+		m_position++;
+	}
 	(*m_tape)[m_position] = c;
 }

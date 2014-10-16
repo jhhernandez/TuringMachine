@@ -30,4 +30,4 @@ target_link_libraries(
 	turingmachine
 	Machine)
 
-install(TARGETS turingmachine RUNTIME DESTINATION bin)
+#install(TARGETS turingmachine RUNTIME DESTINATION bin)
