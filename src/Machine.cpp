@@ -93,7 +93,7 @@ bool Machine::buildAlphabets(const mArray& alphabet)
 			m_gammaAlphabet.insert(val.get_str()[0]);
             break;
 		case Value_type::int_type:
-			m_gammaAlphabet.insert(static_cast<signed char>(val.get_int()));
+			m_gammaAlphabet.insert(static_cast<symbol_t>(val.get_int()));
             break;
         default:
             return false;
@@ -133,9 +133,9 @@ bool Machine::buildStateSet(const mArray& states)
 bool Machine::buildTransitionTable(const mArray& graph)
 {
 	mObject graphObj;
-	signed char from;
-	signed char to;
-	signed char move;
+	symbol_t from;
+	symbol_t to;
+	symbol_t move;
 	State* compareState;
 	State* toState;
 	Header::Direction dir;
@@ -153,7 +153,7 @@ bool Machine::buildTransitionTable(const mArray& graph)
 						from = transitionObj.find("read")->second.get_str()[0];
 						break;
 					case Value_type::int_type:
-						from = static_cast<signed char>(transitionObj.find("read")->second.get_int());
+						from = static_cast<symbol_t>(transitionObj.find("read")->second.get_int());
 						break;
 					default:
 						return false;
@@ -165,7 +165,7 @@ bool Machine::buildTransitionTable(const mArray& graph)
 						to = transitionObj.find("write")->second.get_str()[0];
 						break;
 					case Value_type::int_type:
-						to = static_cast<signed char>(transitionObj.find("write")->second.get_int());
+						to = static_cast<symbol_t>(transitionObj.find("write")->second.get_int());
 						break;
 					default:
 						return false;
@@ -187,13 +187,9 @@ bool Machine::buildTransitionTable(const mArray& graph)
 				} else {
 					toState = new State(-1);
 				}
-				
-				string tmp("");
-				tmp += from;
-				transition_table_cell_t cell(*compareState, tmp);
-				tmp = "";
-				tmp += to;
-				transition_table_content_t content(tmp, dir, *toState);
+
+				transition_table_cell_t cell(*compareState, vector<symbol_t>{from});
+				transition_table_content_t content(vector<symbol_t>{to}, vector<Header::Direction>{dir}, *toState);
 				m_transitionTable->addContentToCell(content, cell);
 				
 				delete toState;
@@ -212,9 +208,9 @@ bool Machine::run(const char* str, bool stepping)
 	m_header->attachTape(*m_tape);
 	
 	bool success = false;
-	signed char currentSymbol;
-	string writeSymbol;
-	Header::Direction nextMove;
+	symbol_t currentSymbol;
+	vector<symbol_t> writeSymbol;
+	vector<Header::Direction> nextMove;
 	State nextState;
 	State currentState = m_initialState;
 	
@@ -230,7 +226,7 @@ bool Machine::run(const char* str, bool stepping)
 			currentSymbol << "). ";
 
 			
-		if (m_transitionTable->existsTransition(currentState.id(), currentSymbol)) {
+		if (m_transitionTable->existsTransition(currentState.id(), vector<symbol_t>{currentSymbol})) {
 			if (m_finalStates.find(currentState) != m_finalStates.end()) {
 				cout << "Reached a final state." << endl;
 				success = true;
@@ -240,16 +236,16 @@ bool Machine::run(const char* str, bool stepping)
 			break;
 		}
 
-		writeSymbol = m_transitionTable->getCellSymbol(currentState.id(), currentSymbol);
-		nextMove = m_transitionTable->getCellDirection(currentState.id(), currentSymbol);
-		nextState = m_transitionTable->getCellState(currentState.id(), currentSymbol);
-		
-		cout << "Writing " << writeSymbol << ", Moving " <<
-			(nextMove == Header::Direction::LEFT?'L':'R');
+		writeSymbol = m_transitionTable->getCellSymbol(currentState.id(), vector<symbol_t>{currentSymbol});
+		nextMove = m_transitionTable->getCellDirection(currentState.id(), vector<symbol_t>{currentSymbol});
+		nextState = m_transitionTable->getCellState(currentState.id(), vector<symbol_t>{currentSymbol});
+
+		cout << "Writing " << writeSymbol[0] << ", Moving " <<
+			(nextMove[0] == Header::Direction::LEFT?'L':'R');
 		if (nextState.id() != -1) { cout << ", changing state to " << nextState.name(); }
 
-		m_header->write(writeSymbol);
-		m_header->move(nextMove);
+		m_header->write(writeSymbol[0]);
+		m_header->move(nextMove[0]);
 		if (nextState.id() != -1) {
 			currentState = nextState;
 		}

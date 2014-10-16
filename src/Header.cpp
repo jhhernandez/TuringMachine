@@ -70,7 +70,7 @@ char Header::read()
 	return (*m_tape)[m_position];
 }
 
-void Header::write(string str)
+void Header::write(symbol_t c)
 {
-	(*m_tape)[m_position] = str[m_tape->id()];
+	(*m_tape)[m_position] = c;
 }

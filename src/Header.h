@@ -23,6 +23,8 @@
 #include <string>
 #include <set>
 
+typedef signed char symbol_t;
+
 class Tape;
 
 class Header
@@ -39,7 +41,7 @@ public:
 	void attachTape(Tape& tape);
 	bool move(Direction dir);
 	char read();
-	void write(std::string str);
+	void write(symbol_t c);
 
 private:
 	Header(const Header& other);
