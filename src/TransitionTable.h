@@ -58,6 +58,7 @@ public:
 	const State& getCellState(const State& state, std::vector<symbol_t> read);
 	bool existsTransition(const transition_table_cell_t& cell);
 	bool existsTransition(const State& state, std::vector<symbol_t> read);
+	void printTable();
 
 	size_t tapes() const { return m_tapeCount; }
 	size_t size() const { return m_stateCount; }

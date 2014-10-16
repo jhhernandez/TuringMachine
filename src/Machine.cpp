@@ -28,8 +28,7 @@
 using namespace std;
 using namespace json_spirit;
 
-Machine::Machine(const char* file) : m_wellFormedMachine(false), m_initialState(0),
-m_header(new Header)
+Machine::Machine(const char* file) : m_wellFormedMachine(false), m_initialState(0)
 {
     ifstream ifs(file);
     mValue root;
@@ -79,8 +78,12 @@ m_header(new Header)
 
 Machine::~Machine()
 {
-	delete m_tape;
-	delete m_header;
+	for (Tape* it : m_tape) {
+		delete it;
+	}
+	for (Header* it : m_header) {
+		delete it;
+	}
 	delete m_transitionTable;
 }
 
@@ -133,8 +136,8 @@ bool Machine::buildStateSet(const mArray& states)
 bool Machine::buildTransitionTable(const mArray& graph)
 {
 	mObject graphObj;
-	symbol_t from;
-	symbol_t to;
+	symbol_t read;
+	symbol_t write;
 	symbol_t move;
 	State* compareState;
 	State* toState;
@@ -150,10 +153,10 @@ bool Machine::buildTransitionTable(const mArray& graph)
 				mObject transitionObj = transition.get_obj();
 				switch(transitionObj.find("read")->second.type()) {
 					case Value_type::str_type:
-						from = transitionObj.find("read")->second.get_str()[0];
+						read = transitionObj.find("read")->second.get_str()[0];
 						break;
 					case Value_type::int_type:
-						from = static_cast<symbol_t>(transitionObj.find("read")->second.get_int());
+						read = static_cast<symbol_t>(transitionObj.find("read")->second.get_int());
 						break;
 					default:
 						return false;
@@ -162,10 +165,10 @@ bool Machine::buildTransitionTable(const mArray& graph)
 
 				switch(transitionObj.find("write")->second.type()) {
 					case Value_type::str_type:
-						to = transitionObj.find("write")->second.get_str()[0];
+						write = transitionObj.find("write")->second.get_str()[0];
 						break;
 					case Value_type::int_type:
-						to = static_cast<symbol_t>(transitionObj.find("write")->second.get_int());
+						write = static_cast<symbol_t>(transitionObj.find("write")->second.get_int());
 						break;
 					default:
 						return false;
@@ -188,10 +191,10 @@ bool Machine::buildTransitionTable(const mArray& graph)
 					toState = new State(-1);
 				}
 
-				transition_table_cell_t cell(*compareState, vector<symbol_t>{from});
-				transition_table_content_t content(vector<symbol_t>{to}, vector<Header::Direction>{dir}, *toState);
+				transition_table_cell_t cell(*compareState, vector<symbol_t>{read});
+				transition_table_content_t content(vector<symbol_t>{write}, vector<Header::Direction>{dir}, *toState);
 				m_transitionTable->addContentToCell(content, cell);
-				
+
 				delete toState;
 			}
 		} else {
@@ -202,10 +205,99 @@ bool Machine::buildTransitionTable(const mArray& graph)
 	return true;
 }
 
+bool Machine::buildMultitapeTransitionTable(const mArray& graph)
+{
+	mObject graphObj;
+	vector<symbol_t> read;
+	vector<symbol_t> write;
+	vector<Header::Direction> dir;
+	State* compareState;
+	State* toState;
+	
+	for (mValue node : graph) {
+		graphObj = node.get_obj();
+		compareState = new State(graphObj.find("State")->second.get_int());
+		
+		if (m_states.find(*compareState) != m_states.end()) {
+			mArray transitions = graphObj.find("Transitions")->second.get_array();
+
+			for (mValue transition : transitions) {
+				read.clear();
+				write.clear();
+				dir.clear();
+
+				mObject transitionObj = transition.get_obj();
+				
+				mArray readArray = transitionObj.find("read")->second.get_array();
+				for (mValue readSymbol : readArray) {
+					switch(readSymbol.type()) {
+						case Value_type::str_type:
+							read.push_back(readSymbol.get_str()[0]);
+							break;
+						case Value_type::int_type:
+							read.push_back(static_cast<symbol_t>(readSymbol.get_int()));
+							break;
+						default:
+							return false;
+							break;
+					}
+				}
+				
+				mArray writeArray = transitionObj.find("write")->second.get_array();
+				for (mValue writeSymbol : writeArray) {
+					switch(writeSymbol.type()) {
+						case Value_type::str_type:
+							write.push_back(writeSymbol.get_str()[0]);
+							break;
+						case Value_type::int_type:
+							write.push_back(static_cast<symbol_t>(writeSymbol.get_int()));
+							break;
+						default:
+							break;
+					}
+				}
+				
+				mArray moveArray = transitionObj.find("move")->second.get_array();
+				for (mValue moveSymbol : moveArray) {
+					if (moveSymbol == "R") {
+						dir.push_back(Header::Direction::RIGHT);
+					} else if (moveSymbol == "L") {
+						dir.push_back(Header::Direction::LEFT);
+					} else {
+						dir.push_back(Header::Direction::HALT);
+					}
+				}
+				
+				if (transitionObj.find("toState") != transitionObj.end()) {
+					toState = new State(transitionObj.find("toState")->second.get_int());
+				} else {
+					toState = new State(-1);
+				}
+				
+				transition_table_cell_t cell(*compareState, read);
+				transition_table_content_t content(write, dir, *toState);
+				m_transitionTable->addContentToCell(content, cell);
+
+				delete toState;
+			}
+			
+		} else {
+			return false;
+		}
+		delete compareState;
+	}
+
+	// m_transitionTable->printTable();
+	return true;
+}
+
 bool Machine::run(const char* str, bool stepping)
 {
-	m_tape = new Tape(str);
-	m_header->attachTape(*m_tape);
+	Tape* tape = new Tape(str);
+	m_tape.push_back(tape);
+	Header* header = new Header;
+	header->attachTape(*m_tape[0]);
+	m_header.push_back(header);
 	
 	bool success = false;
 	symbol_t currentSymbol;
@@ -220,8 +312,8 @@ bool Machine::run(const char* str, bool stepping)
 	}
 
 	while (1) {
-		currentSymbol = m_header->read();
-		cout << "Read symbol " << currentSymbol << " in tape " << m_tape->stdString() << ". ";
+		currentSymbol = m_header[0]->read();
+		cout << "Read symbol " << currentSymbol << " in tape " << m_tape[0]->stdString() << ". ";
 		cout << "Looking up transition in (" << currentState.name() << ", " <<
 			currentSymbol << "). ";
 
@@ -244,8 +336,8 @@ bool Machine::run(const char* str, bool stepping)
 			(nextMove[0] == Header::Direction::LEFT?'L':'R');
 		if (nextState.id() != -1) { cout << ", changing state to " << nextState.name(); }
 
-		m_header->write(writeSymbol[0]);
-		m_header->move(nextMove[0]);
+		m_header[0]->write(writeSymbol[0]);
+		m_header[0]->move(nextMove[0]);
 		if (nextState.id() != -1) {
 			currentState = nextState;
 		}
@@ -259,7 +351,97 @@ bool Machine::run(const char* str, bool stepping)
     return success;
 }
 
-bool Machine::buildMultitapeTransitionTable(const mArray& graph)
+bool Machine::runMultitape(const char* str, bool stepping)
 {
-	return true;
+	for (auto str : multiTapeStrings(str)) {
+		Tape* newTape = new Tape(str);
+		Header* newHeader = new Header;
+		newHeader->attachTape(*newTape);
+		m_tape.push_back(newTape);
+		m_header.push_back(newHeader);
+	}
+
+	bool success = false;
+	vector<symbol_t> currentSymbol;
+	vector<symbol_t> writeSymbol;
+	vector<Header::Direction> nextMove;
+	State nextState;
+	State currentState = m_initialState;
+	
+	if (!m_wellFormedMachine) {
+		cout << "The machine is not well formed and cannot be run." << endl;
+		return false;
+	}
+	
+	while (1) {
+		currentSymbol.clear();
+		for (Header* header : m_header) {
+			currentSymbol.push_back(header->read());
+		}
+		cout << "Read symbols ";
+		for (symbol_t sym : currentSymbol)
+			cout << sym;
+		cout << " in tapes ";
+		for (Tape* tape : m_tape)
+			cout << tape->stdString() << ", ";
+		cout << ". ";
+		cout << "Looking up transition in (" << currentState.name() << ", ";
+		for (symbol_t sym : currentSymbol)
+			cout << sym;
+		cout << "). ";
+
+		if (m_transitionTable->existsTransition(currentState, currentSymbol)) {
+			if (m_finalStates.find(currentState) != m_finalStates.end()) {
+				cout << "Reached a final state." << endl;
+				success = true;
+			} else {
+				cout << "Reached a dead state." << endl;
+			}
+			break;
+		}
+		
+		writeSymbol = m_transitionTable->getCellSymbol(currentState.id(), currentSymbol);
+		nextMove = m_transitionTable->getCellDirection(currentState.id(), currentSymbol);
+		nextState = m_transitionTable->getCellState(currentState.id(), currentSymbol);
+		
+		cout << "Writing ";
+		for (symbol_t sym : writeSymbol)
+			cout << sym;
+		cout << ", Moving ";
+		for (Header::Direction dir : nextMove)
+			cout << (dir == Header::Direction::LEFT?'L':'R');
+		if (nextState.id() != -1) { cout << ", changing state to " << nextState.name(); }
+
+		for (uint i = 0; i < m_header.size(); ++i) {
+			m_header[i]->write(writeSymbol[i]);
+			m_header[i]->move(nextMove[i]);
+		}
+
+		if (nextState.id() != -1) {
+			currentState = nextState;
+		}
+		
+		cout << endl;
+
+		if (stepping) {
+			cin.get();
+		}
+	}
+
+	return success;
+}
+
+const vector< string >& Machine::multiTapeStrings(const string& str)
+{
+	vector<string> tmp;
+	int start = 0;
+	int end = str.length();
+	
+	while ((end = str.find(',', start)) != string::npos) {
+		tmp.push_back(str.substr(start, end));
+		start = end + 1;
+	}
+	tmp.push_back(str.substr(start));
+	
+	return *(new vector<string>(tmp));
 }

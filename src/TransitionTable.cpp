@@ -18,6 +18,7 @@
  */
 
 #include "TransitionTable.h"
+#include <iostream>
 
 using namespace std;
 
@@ -91,4 +92,23 @@ bool TransitionTable::existsTransition(const transition_table_cell_t& cell)
 bool TransitionTable::existsTransition(const State& state, std::vector<symbol_t> read)
 {
 	return existsTransition(transition_table_cell_t(state.id(), read));
+}
+
+void TransitionTable::printTable()
+{
+	for (uint i = 0; i < m_stateCount; ++i) {
+		cout << "q_" << i << ": ";
+		for (auto it : m_table[i]) {
+			for (symbol_t c :get<0>(it.second)) {
+				cout << c;
+			}
+			cout << " ";
+			for (Header::Direction dir : get<1>(it.second)) {
+				cout << (dir == Header::Direction::LEFT?'L':'R');
+			}
+			cout << " ";
+			cout << get<2>(it.second).name() << "\t";
+		}
+		cout << endl;
+	}
 }

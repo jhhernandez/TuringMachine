@@ -11,7 +11,8 @@ int main(int argc, const char **argv) {
 	}
 	Machine machine(argv[1]);
 	
-	if (machine.run(argv[2], false))
+	if (machine.runMultitape(argv[2], false))
+	//if (machine.run(argv[2], false))
 		return EXIT_SUCCESS;
 	return EXIT_FAILURE;
 }

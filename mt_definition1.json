@@ -1,0 +1,27 @@
+{
+	"TuringMachine" :
+	{
+		"Type" : "multiTape",
+		"Tapes" : 2,
+
+		"StateList" : [
+		{"id" : 0, "initial" : true, "final" : true}
+		],
+
+		"Alphabet" : [
+		"a",
+		"b",
+		-1
+		],
+
+		"TransitionGraph" : [
+		{
+			"State" : 0, 
+			"Transitions" : [
+			{"read" : ["a",-1], "write" : ["a","a"], "move" : ["R","R"]},
+			{"read" : ["b",-1], "write" : ["b","b"], "move" : ["R","R"]}
+			]
+		}
+		]
+	}
+}

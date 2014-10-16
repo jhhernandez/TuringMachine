@@ -37,6 +37,7 @@ public:
 	Machine(const char* file);
 	virtual ~Machine();
 	bool run(const char* str, bool stepping = false);
+	bool runMultitape(const char* str, bool stepping = false);
 
 private:
 	std::set<State> m_states; //!< Set of the states of the machine
@@ -46,8 +47,8 @@ private:
 	static const char m_blankSymbol = -1;
 	TransitionTable* m_transitionTable;
 
-	Tape* m_tape;
-	Header* m_header;
+	std::vector<Tape*> m_tape;
+	std::vector<Header*> m_header;
 
 	State m_initialState;
 	bool m_wellFormedMachine;
@@ -58,6 +59,7 @@ private:
 	bool buildAlphabets(const json_spirit::mArray& alphabet);
 	bool buildTransitionTable(const json_spirit::mArray& graph);
 	bool buildMultitapeTransitionTable(const json_spirit::mArray& graph);
+	const std::vector<std::string>& multiTapeStrings(const std::string& str);
 };
 
 #endif // MACHINE_H
