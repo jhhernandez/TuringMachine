@@ -353,8 +353,8 @@ bool Machine::run(const char* str, bool stepping)
 
 bool Machine::runMultitape(const char* str, bool stepping)
 {
-	for (auto str : multiTapeStrings(str)) {
-		Tape* newTape = new Tape(str);
+	for (auto tapeStr : multiTapeStrings(str)) {
+		Tape* newTape = new Tape(tapeStr);
 		Header* newHeader = new Header;
 		newHeader->attachTape(*newTape);
 		m_tape.push_back(newTape);
