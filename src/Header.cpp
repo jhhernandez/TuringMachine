@@ -24,48 +24,47 @@
 
 using namespace std;
 
-Header::Header(Tape& tape) : m_position(2), m_tape(tape)
+Header::Header(Tape& tape) : m_tape(tape), m_position(2)
 {
 
 }
-
 
 
 bool Header::move(Header::Direction dir)
 {
-	switch(dir) {
-            case Direction::RIGHT:
-			if (m_position + 1 > m_tape.length()) {
-				m_position = 0;
-			} else {
-				++m_position;
-			}
-			break;
-            case Direction::LEFT:
-			if (m_position - 1 < 0) {
-				m_position = m_tape.length();
-			} else {
-				--m_position;
-			}
-			break;
-            case Direction::HALT:
-			break;
-		default:
-			return false;
-			break;
-	}
-	return true;
+    switch(dir) {
+        case Direction::RIGHT:
+            if (m_position + 1 > m_tape.length()) {
+                m_position = 0;
+            } else {
+                ++m_position;
+            }
+            break;
+        case Direction::LEFT:
+            if (m_position - 1 < 0) {
+                m_position = m_tape.length();
+            } else {
+                --m_position;
+            }
+            break;
+        case Direction::HALT:
+            break;
+        default:
+            return false;
+            break;
+    }
+    return true;
 }
 
 symbol_t Header::read()
 {
-	return m_tape[m_position];
+    return m_tape[m_position];
 }
 
 void Header::write(symbol_t c)
 {
-	if (m_position < 1) {
-		m_position++;
-	}
-	m_tape[m_position] = c;
+    if (m_position < 1) {
+        m_position++;
+    }
+    m_tape[m_position] = c;
 }

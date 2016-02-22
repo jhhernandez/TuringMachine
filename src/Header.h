@@ -30,20 +30,20 @@ using symbol_t = signed char;
 class Header
 {
 public:
-	enum class Direction {
-		LEFT,
-		RIGHT,
-		HALT
-	};
-	
-        Header(Tape& tape);
-	bool move(Direction dir);
-	symbol_t read();
-	void write(symbol_t c);
+    enum class Direction {
+        LEFT,
+        RIGHT,
+        HALT
+    };
+
+    Header(Tape& tape);
+    bool move(Direction dir);
+    symbol_t read();
+    void write(symbol_t c);
 
 private:
-	Tape& m_tape;
-	int m_position;
+    Tape& m_tape;
+    int m_position;
 };
 
 #endif // HEADER_H
