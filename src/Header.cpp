@@ -42,21 +42,21 @@ void Header::attachTape(Tape& tape)
 bool Header::move(Header::Direction dir)
 {
 	switch(dir) {
-		case RIGHT:
+            case Direction::RIGHT:
 			if (m_position + 1 > m_tape->length()) {
 				m_position = 0;
 			} else {
 				++m_position;
 			}
 			break;
-		case LEFT:
+            case Direction::LEFT:
 			if (m_position - 1 < 0) {
 				m_position = m_tape->length();
 			} else {
 				--m_position;
 			}
 			break;
-		case HALT:
+            case Direction::HALT:
 			break;
 		default:
 			return false;

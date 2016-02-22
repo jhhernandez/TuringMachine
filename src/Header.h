@@ -23,20 +23,20 @@
 #include <string>
 #include <set>
 
-typedef signed char symbol_t;
+using symbol_t = signed char;
 
 class Tape;
 
 class Header
 {
 public:
-	enum Direction{
+	enum class Direction {
 		LEFT,
 		RIGHT,
 		HALT
 	};
 	
-    Header();
+        Header();
 	virtual ~Header();
 	void attachTape(Tape& tape);
 	bool move(Direction dir);
@@ -45,7 +45,7 @@ public:
 
 private:
 	Header(const Header& other);
-    Header& operator=(const Header& other);
+        Header& operator=(const Header& other);
 
 	Tape* m_tape;
 	int m_position;
