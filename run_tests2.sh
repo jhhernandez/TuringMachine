@@ -1,32 +1,34 @@
 #!/bin/bash
 
+TM=build/turingmachine
+TEST="test_definition2.json"
 A="a"
 B="bba"
 C="ab"
 D="aaaabbbbbbbbbbbb"
 
-build/turingmachine "test_definition2.json" $A
+$TM $TEST $A
 if [ $? = 0 ]; then
 	echo valid string
 else
 	echo invalid string
 fi
 
-build/turingmachine "test_definition2.json" $B
+$TM $TEST $B
 if [ $? = 0 ]; then
 	echo valid string
 else
 	echo invalid string
 fi
 
-build/turingmachine "test_definition2.json" $C
+$TM $TEST $C
 if [ $? = 0 ]; then
 	echo valid string
 else
 	echo invalid string
 fi
 
-build/turingmachine "test_definition2.json" $D
+$TM $TEST $D
 if [ $? = 0 ]; then
 	echo valid string
 else
