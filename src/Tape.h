@@ -29,12 +29,8 @@ private:
     std::string m_tape;
 	uint m_id;
 
-    Tape(const Tape& other);
-    Tape& operator=(const Tape& other);
-
 public:
     Tape(const std::string & str, uint id = 0);
-    virtual ~Tape();
     const std::string& stdString() const;
 	uint id() { return m_id; }
     char& operator[](size_t npos);

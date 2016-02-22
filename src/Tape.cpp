@@ -35,16 +35,6 @@ m_id(id)
 	m_tape = tmp;
 }
 
-Tape::~Tape()
-{
-
-}
-
-Tape& Tape::operator=(const Tape& other)
-{
-
-}
-
 const string& Tape::stdString() const
 {
 	return m_tape;
