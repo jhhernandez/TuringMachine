@@ -26,15 +26,17 @@
 class Tape
 {
 private:
+    static constexpr signed char m_blank = static_cast<signed char>(-1);
+    
     std::string m_tape;
-	uint m_id;
+    uint m_id;
 
 public:
     Tape(const std::string & str, uint id = 0);
     const std::string& stdString() const;
-	uint id() { return m_id; }
+    uint id() { return m_id; }
     char& operator[](size_t npos);
-	inline const std::size_t length() const { return m_tape.size(); }
+    const std::size_t length() const { return m_tape.size(); }
 };
 
 #endif // TAPE_H

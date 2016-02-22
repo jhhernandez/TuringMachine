@@ -18,37 +18,37 @@
  */
 
 #include "Tape.h"
-#include <iostream>
 
-using namespace std;
+using std::string;
 
 Tape::Tape(const string& str, uint id) :
 m_id(id)
 {
-	signed char blank = static_cast<signed char>(-1);
-	string tmp;
-	tmp += blank;
-	tmp += blank;
-	tmp += str;
-	tmp += blank;
-	tmp += blank;
-	m_tape = tmp;
+    string tmp;
+    tmp += m_blank;
+    tmp += m_blank;
+    tmp += str;
+    tmp += m_blank;
+    tmp += m_blank;
+    m_tape = tmp;
 }
 
 const string& Tape::stdString() const
 {
-	return m_tape;
+    return m_tape;
 }
 
 char& Tape::operator[](size_t npos)
 {
-	if (npos >= m_tape.length() - 1) {
-		m_tape.resize(m_tape.length() + 1, static_cast<signed char>(-1));
-	} else if (npos < 1) {
-		string tmp;
-		tmp.append(1, static_cast<signed char>(-1));
-		tmp.append(m_tape);
-		m_tape = tmp;
-	}
-	return m_tape[npos];
+    if (npos >= m_tape.length() - 1) {
+        m_tape.resize(m_tape.length() + 1, static_cast<signed char>(-1));
+        
+    } else if (npos < 1) {
+        string tmp;
+        tmp.append(1, static_cast<signed char>(-1));
+        tmp.append(m_tape);
+        m_tape = tmp;
+        
+    }
+    return m_tape[npos];
 }
