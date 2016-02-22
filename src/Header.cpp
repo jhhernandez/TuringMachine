@@ -57,7 +57,7 @@ bool Header::move(Header::Direction dir)
 	return true;
 }
 
-char Header::read()
+symbol_t Header::read()
 {
 	return m_tape[m_position];
 }

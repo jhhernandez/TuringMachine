@@ -23,9 +23,9 @@
 #include <string>
 #include <set>
 
-using symbol_t = signed char;
+#include "Tape.h"
 
-class Tape;
+using symbol_t = signed char;
 
 class Header
 {
@@ -37,9 +37,8 @@ public:
 	};
 	
         Header(Tape& tape);
-// 	void attachTape(Tape& tape);
 	bool move(Direction dir);
-	char read();
+	symbol_t read();
 	void write(symbol_t c);
 
 private:
