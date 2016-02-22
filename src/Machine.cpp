@@ -295,8 +295,8 @@ bool Machine::run(const char* str, bool stepping)
 {
 	Tape* tape = new Tape(str);
 	m_tape.push_back(tape);
-	Header* header = new Header;
-	header->attachTape(*m_tape[0]);
+	Header* header = new Header(*m_tape[0]);
+// 	header->attachTape(*m_tape[0]);
 	m_header.push_back(header);
 	
 	bool success = false;
@@ -355,8 +355,8 @@ bool Machine::runMultitape(const char* str, bool stepping)
 {
 	for (auto tapeStr : multiTapeStrings(str)) {
 		Tape* newTape = new Tape(tapeStr);
-		Header* newHeader = new Header;
-		newHeader->attachTape(*newTape);
+		Header* newHeader = new Header(*newTape);
+// 		newHeader->attachTape(*newTape);
 		m_tape.push_back(newTape);
 		m_header.push_back(newHeader);
 	}

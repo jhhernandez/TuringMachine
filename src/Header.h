@@ -36,18 +36,14 @@ public:
 		HALT
 	};
 	
-        Header();
-	virtual ~Header();
-	void attachTape(Tape& tape);
+        Header(Tape& tape);
+// 	void attachTape(Tape& tape);
 	bool move(Direction dir);
 	char read();
 	void write(symbol_t c);
 
 private:
-	Header(const Header& other);
-        Header& operator=(const Header& other);
-
-	Tape* m_tape;
+	Tape& m_tape;
 	int m_position;
 };
 
