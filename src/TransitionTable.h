@@ -27,41 +27,36 @@
 #include "Header.h"
 #include "State.h"
 
-class State;
-
-typedef signed char symbol_t;
-
-typedef std::tuple<const State, std::vector<symbol_t> > transition_table_cell_t;
-typedef std::tuple<std::vector<symbol_t>, std::vector<Header::Direction>, const State> transition_table_content_t;
+using transition_table_cell_t = std::tuple<const State, std::vector<symbol_t> >;
+using transition_table_content_t = std::tuple<std::vector<symbol_t>, std::vector<Header::Direction>, const State>;
 
 class TransitionTable
 {
 private:
-	std::map<std::vector<symbol_t>, transition_table_content_t>* m_table;
-	size_t m_tapeCount;
-	size_t m_stateCount;
+    std::map<std::vector<symbol_t>, transition_table_content_t>* m_table;
+    size_t m_tapeCount;
+    size_t m_stateCount;
 public:
     TransitionTable(size_t states, size_t tapes = 1);
-	~TransitionTable();
-	
-	void addContentToCell(const transition_table_content_t& content,
-						  const transition_table_cell_t& cell);
-	
-	const transition_table_content_t& getCellContent(const transition_table_cell_t& cell);
-	const transition_table_content_t& getCellContent(const State& state, std::vector<symbol_t> read);
-	
-	const std::vector<symbol_t>& getCellSymbol(const transition_table_cell_t& cell);
-	const std::vector<symbol_t>& getCellSymbol(const State& state, std::vector<symbol_t> read);
-	const std::vector<Header::Direction> getCellDirection(const transition_table_cell_t& cell);
-	const std::vector<Header::Direction> getCellDirection(const State& state, std::vector<symbol_t> read);
-	const State& getCellState(const transition_table_cell_t& cell);
-	const State& getCellState(const State& state, std::vector<symbol_t> read);
-	bool existsTransition(const transition_table_cell_t& cell);
-	bool existsTransition(const State& state, std::vector<symbol_t> read);
-	void printTable();
+    ~TransitionTable();
 
-	size_t tapes() const { return m_tapeCount; }
-	size_t size() const { return m_stateCount; }
+    void addContentToCell(const transition_table_content_t& content, const transition_table_cell_t& cell);
+
+    const transition_table_content_t& getCellContent(const transition_table_cell_t& cell);
+    const transition_table_content_t& getCellContent(const State& state, std::vector<symbol_t> read);
+
+    const std::vector<symbol_t>& getCellSymbol(const transition_table_cell_t& cell);
+    const std::vector<symbol_t>& getCellSymbol(const State& state, std::vector<symbol_t> read);
+    const std::vector<Header::Direction> getCellDirection(const transition_table_cell_t& cell);
+    const std::vector<Header::Direction> getCellDirection(const State& state, std::vector<symbol_t> read);
+    const State& getCellState(const transition_table_cell_t& cell);
+    const State& getCellState(const State& state, std::vector<symbol_t> read);
+    bool existsTransition(const transition_table_cell_t& cell);
+    bool existsTransition(const State& state, std::vector<symbol_t> read);
+    void printTable();
+
+    size_t tapes() const { return m_tapeCount; }
+    size_t size() const { return m_stateCount; }
 };
 
 #endif // TRANSITIONTABLE_H
