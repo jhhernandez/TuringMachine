@@ -19,7 +19,7 @@
 
 #include "State.h"
 
-using namespace std;
+using std::to_string;
 
 State::State() : m_id(-1)
 {
@@ -29,11 +29,6 @@ State::State() : m_id(-1)
 State::State(int id) : m_id(id)
 {
 	m_name = "q_" + to_string(m_id);
-}
-
-State::~State()
-{
-
 }
 
 bool State::operator==(const State& other) const
