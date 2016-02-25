@@ -20,7 +20,7 @@ matrix:
                       - llvm-toolchain-precise-3.6
                   packages:
                       - clang-3.6
-              env: COMPILER=clang++-3.6
+          env: COMPILER=clang++-3.6
 
 before_script:
     - mkdir build
