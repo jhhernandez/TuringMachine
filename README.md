@@ -1,4 +1,5 @@
 TuringMachine
+[![Build Status](https://travis-ci.org/jhhernandez/TuringMachine.svg?branch=master)](https://travis-ci.org/jhhernandez/TuringMachine)
 =============
 A Turing Machine simulator written in c++ for the Computational Complexity
 course in ULL.
